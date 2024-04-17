@@ -14,7 +14,6 @@ export class RolesDto{
 
     @IsNotEmpty()
     @IsString()
-    @MaxLength(50)
     role: string;
   
 }

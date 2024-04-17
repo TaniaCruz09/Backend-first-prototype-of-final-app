@@ -1,8 +1,12 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
+    Param,
+    ParseIntPipe,
     Post,
+    Put,
     Query,
 
     
@@ -24,10 +28,22 @@ export class RolesController{
       };
       return data;
     }
-    /*
+   
     @Get('/')
-    async getRoles(@Query() query: RolesDto) {
-    const roles = await this.rolesService.getRoles(query);
+    async getRoles() {
+    const roles = await this.rolesService.getRoles();
+    const data = {
+      data: roles,
+      message: 'Ok',
+    };
+
+    return data;
+  }
+  
+
+  @Get('/:id')
+  async getRolesById(@Param('id', ParseIntPipe) id: number) {
+    const roles = await this.rolesService.getRolesById(id);
 
     const data = {
       data: roles,
@@ -36,6 +52,33 @@ export class RolesController{
 
     return data;
   }
-  */
+
+  @Put('/:id')
+  async updateRole(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: RolesDto,
+  ) {
+    const roles = await this.rolesService.updateRole(id, payload);
+
+    const data = {
+      data: roles,
+    };
+
+    return data;
+  }
+
+  @Delete('/:id')
+  async deleteRole(@Param('id', ParseIntPipe) id: number) {
+    const roles = await this.rolesService.deleteRoles(id);
+
+    const data = {
+      data: roles,
+      message: 'Role deleted',
+    };
+
+    return data;
+  }
+
+
 
 }

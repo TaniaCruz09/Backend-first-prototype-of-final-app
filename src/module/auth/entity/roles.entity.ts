@@ -8,9 +8,11 @@
  @Entity({ name: 'roles' })
 
  export class RolesEntity{
-   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
+   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column({ name: 'role', type: 'varchar', length: 50, nullable: false })
+  @Column()
   role: string;
+
+  
  }

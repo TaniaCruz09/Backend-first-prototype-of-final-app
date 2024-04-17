@@ -1,8 +1,9 @@
-import { Injectable, Query } from "@nestjs/common";
+import { Injectable, NotFoundException, Query } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from "typeorm";
 import { RolesEntity } from "../entity/roles.entity";
 import { RolesDto } from "../dto/roles.dto";
+import { Console } from "console";
 
 @Injectable()
 export class RolesService{
@@ -16,14 +17,35 @@ export class RolesService{
         return await this.roleRepo.save(roles);
       }
 
-     /*
-     Este metodo aun no funciona 
-      async getRoles(query: RolesDto){
-        console.log(query)
+    
+      async getRoles(){
         const roles = await this.roleRepo.find();
+        console.log(roles)
+        return roles;
+        
+      }
+      
+
+      async getRolesById(id: number): Promise<RolesEntity> {
+        const roles = await this.roleRepo.findOne({
+          where: { id },
+        });
+    
         return roles;
       }
-      */
+
+      async updateRole(id:number, payload:RolesDto ): Promise<RolesEntity>{
+        const roles = await this.roleRepo.preload({id, ...payload });
+        return await this.roleRepo.save(roles)
+      }
+
+      async deleteRoles (id:number): Promise<RolesEntity> {
+        const roles = await this.roleRepo.findOne({
+          where: {id: id}
+        });
+        
+        return await this.roleRepo.remove(roles);
+      }
 
 
 }

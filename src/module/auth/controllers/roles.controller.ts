@@ -8,14 +8,17 @@ import {
     Post,
     Put,
     Query,
+    UseGuards,
 
     
 } from "@nestjs/common";
 import { RolesDto } from "../dto/roles.dto";
 import { RolesService } from "../services/roles.service";
+import { AuthGuard } from "@nestjs/passport";
 
 
 @Controller('roles')
+//@UseGuards(AuthGuard())
 export class RolesController{
     constructor(private readonly rolesService: RolesService){}
 

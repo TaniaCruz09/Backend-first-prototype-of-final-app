@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLeng
 
 
 export class UserDto{
-@IsNumber()
+  @IsNumber()
   @IsOptional()
   @ApiProperty()
   readonly id?: number;
@@ -24,6 +24,12 @@ export class UserDto{
   @IsNotEmpty()
   @ApiProperty()
   readonly password: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(200)
+  @ApiProperty()
+  readonly token: string;
 
 }
 export class UserPartialTypeDto extends PartialType(UserDto){}

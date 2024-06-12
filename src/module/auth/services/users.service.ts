@@ -14,6 +14,27 @@ export class UsersService{
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
       ) {}
+      countItems() {
+        return this.users.length;
+      }
+
+      async findByEmail(email: string) {
+        const user = await this.userRepository.findOne({
+          where: { email },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            password: true,
+          },
+        });
+    
+        if (!user) {
+          throw new NotFoundException('No se encontro el usuario');
+        }
+    
+        return user;
+      }
 
     async created(payload: UserDto) {
         try {

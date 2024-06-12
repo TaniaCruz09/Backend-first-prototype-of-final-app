@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { RolesModule } from './module/auth/auth.module';
 import { DatabaseModule } from './module/database/database.module';
+import { AuthModule } from './module/auth/auth.module';
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { DatabaseModule } from './module/database/database.module';
       isGlobal: true,
     }),
     DatabaseModule,
-    RolesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

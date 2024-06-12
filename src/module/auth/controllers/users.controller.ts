@@ -4,7 +4,6 @@ import { UserDto, UserPartialTypeDto } from "../dto/users.dto";
 import { AuthGuard } from "@nestjs/passport";
 
 @Controller('users')
-//@UseGuards(AuthGuard())
 export class UserController{
     constructor(private readonly usersServices: UsersService) {}
 

@@ -23,12 +23,10 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
-<<<<<<< HEAD
     "class-validator": "^0.14.1",
-=======
     "@nestjs/typeorm": "^10.0.2",
     "pg": "^8.12.0",
->>>>>>> cb4b646d63d29cffdccc5290d0057b5e95db1452
+
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20"

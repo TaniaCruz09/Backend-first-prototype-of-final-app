@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Post } from "@nestjs/common";
 import { SeccionService } from "./seccion.service";
 
 @Controller('seccion')
@@ -16,5 +16,16 @@ export class SeccionController {
           return data;
     }
 
-    // @Get('/:id')
+    @Get('/:id')
+    async findOne(){
+        const seccion = await this.seccionService.findOne
+        const data = {
+            data: seccion,
+            message: 'ok',
+          };
+          return data;
+    }
+
+
+
 }

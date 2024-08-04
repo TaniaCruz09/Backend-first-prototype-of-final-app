@@ -10,4 +10,4 @@ import { Modalidad } from "./modalidad.entity";
     controllers: [ModalidadController],
     providers: [ModalidadService],
   })
-  export class MOdalidadModule {}
+  export class ModalidadModule {}

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe } from '@nestjs/common';
-import { ModalidadService } from './modalidad.service';
-import { createModalidadDto } from './modalidad.dto';
+import { ModalidadService } from '../services/modalidad.service';
+import { createModalidadDto } from '../dtos/modalidad.dto';
 
 
 

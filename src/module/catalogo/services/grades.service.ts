@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
-import { GradesDto } from "./grades.dto";
-import { GradesEntity } from "./grades.entity";
+import { GradesDto } from "../dtos/grades.dto";
+import { GradesEntity } from "../entities/grades.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 

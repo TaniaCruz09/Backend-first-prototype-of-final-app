@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
-import { AcademicLevelService } from "./academiclevel.service";
-import { AcademicLevelDto } from "./academiclevel.dto";
+import { AcademicLevelService } from "../services/academiclevel.service";
+import { AcademicLevelDto } from "../dtos/academiclevel.dto";
+
 
 
 

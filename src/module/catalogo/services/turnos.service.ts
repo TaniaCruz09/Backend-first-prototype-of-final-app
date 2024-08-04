@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm';
-import { Turno } from './turnos.entity';
+import { Turno } from '../entities/turnos.entity';
 
 
 

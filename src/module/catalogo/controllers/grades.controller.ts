@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
-import { GradesDto } from "./grades.dto";
-import { GradesService } from "./grades.service";
+import { GradesService } from "../services/grades.service";
+import { GradesDto } from "../dtos/grades.dto";
+
 
 
 @Controller('grades')

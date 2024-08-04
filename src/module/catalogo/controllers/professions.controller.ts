@@ -7,9 +7,9 @@ import {
     ParseIntPipe,
     Post,
     Put,} from "@nestjs/common";
+import { ProfessionsService } from "../services/professions.service";
+import { ProfessionsDto } from "../dtos/professions.dto";
     
-import { ProfessionsService } from "./professions.service";
-import { ProfessionsDto } from "./professions.dto";
 
 @Controller('profession')
 

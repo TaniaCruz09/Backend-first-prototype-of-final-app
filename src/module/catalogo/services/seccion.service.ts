@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm';
-import { Seccion } from './seccion.entity';
+import { Seccion } from '../entities/seccion.entity';
 
 
 

@@ -15,5 +15,4 @@ export class GradesEntity{
         length:100
     })
     grades:string
-
 }

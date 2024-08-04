@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({ name: 'etnia'})
-export class Turno {
+@Entity({ name: 'modalidad'})
+export class Modalidad {
     @PrimaryGeneratedColumn({
         name: 'id',
         type: 'int4'
@@ -9,12 +9,12 @@ export class Turno {
     id: number;
 
     @Column({
-        name: 'etnia',
+        name: 'modalidad',
         type: 'varchar',
         // nullable: false,
         length: 50,
     })
-    turno: string;
+    modalidad: string;
 
     // @Column()
     // create_at: Date;

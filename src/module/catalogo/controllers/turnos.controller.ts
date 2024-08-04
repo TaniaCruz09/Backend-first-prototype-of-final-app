@@ -1,17 +1,16 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe } from '@nestjs/common';
-import { EtniaService } from './etnia.service';
-import { createEtniaDto } from './etnia.dto';
+import { TurnoService } from '../services/turnos.service';
+import { createTurnoDto } from '../dtos/turnos.dto';
 
-
-@Controller('etnia')
-export class EtniaController {
-  constructor(private readonly etniaService: EtniaService) {}
+@Controller('turno')
+export class TurnoController {
+  constructor(private readonly turnoService: TurnoService) {}
 
   @Get('/')
   async findAll() {
-    const etnia = await this.etniaService.findAll();
+    const turno = await this.turnoService.findAll();
     const data = {
-      data: etnia,
+      data: turno,
       message: 'ok',
     };
     return data;
@@ -19,19 +18,19 @@ export class EtniaController {
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const etnia = await this.etniaService.findOne(id);
+    const turno = await this.turnoService.findOne(id);
     const data = {
-      data: etnia,
+      data: turno,
       message: 'ok',
     };
     return data;
   }
 
   @Post('/')
-  async create(@Body() payload: createEtniaDto){
-    const etnia = await this.etniaService.create(payload);
+  async create(@Body() payload: createTurnoDto){
+    const turno = await this.turnoService.create(payload);
     const data = {
-      data: etnia,
+      data: turno,
       message: 'ok',
     };
     return data;
@@ -40,11 +39,11 @@ export class EtniaController {
   @Put('/:id')
   async update(
     @Param('id', ParseIntPipe) id: number, 
-    @Body() payload: createEtniaDto,
+    @Body() payload: createTurnoDto,
   ){
-    const etnia = await this.etniaService.update(id, payload);
+    const turno = await this.turnoService.update(id, payload);
     const data = {
-      data: etnia,
+      data: turno,
       message: 'ok',
     };
     return data;
@@ -52,9 +51,9 @@ export class EtniaController {
 
   @Delete('/:id')
   async delete(@Param('id', ParseIntPipe) id: number) {
-    const etnia = await this.etniaService.delete(id);
+    const turno = await this.turnoService.delete(id);
     const data = {
-      data: etnia,
+      data: turno,
       message: 'ok',
     };
     return data;

@@ -1,8 +1,8 @@
 import { Injectable} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ProfessionsEntity } from "./professions.entity";
-import { ProfessionsDto } from "./professions.dto";
+import { ProfessionsEntity } from "../entities/professions.entity";
+import { ProfessionsDto } from "../dtos/professions.dto";
 
 @Injectable()
 export class ProfessionsService{

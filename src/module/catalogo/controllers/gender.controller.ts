@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
-import { GenderService } from "./gender.service";
-import { GenderDto } from "./gender.dto";
+import { GenderService } from "../services/gender.service";
+import { GenderDto } from "../dtos/gender.dto";
+
 
 
 

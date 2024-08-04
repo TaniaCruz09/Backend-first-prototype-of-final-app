@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm';
-import { Etnia } from './etnia.entity';
+import { Etnia } from '../entities/etnia.entity';
 
 
 @Injectable()
@@ -19,7 +19,7 @@ export class EtniaService {
   async findOne(id: number): Promise<Etnia> {
     const etnia = await this.etniaRepository.findOne({ where: { id } });
     if (!etnia) {
-      throw new NotFoundException(`Turno con ID ${id} no encontrado`);
+      throw new NotFoundException(`Etnia con ID ${id} no encontrado`);
     }
     return etnia;
   }
@@ -34,7 +34,7 @@ export class EtniaService {
       ...updateEtniaDTO,
     });
     if (!etnia) {
-      throw new NotFoundException(`Turno con ID ${id} no encontrado`);
+      throw new NotFoundException(`Etnia con ID ${id} no encontrado`);
     }
     return await this.etniaRepository.save(etnia);
   }
@@ -42,7 +42,7 @@ export class EtniaService {
   async delete(id: number): Promise<void> {
     const result = await this.etniaRepository.delete(id);
     if (result.affected === 0) {
-      throw new NotFoundException(`Turno con ID ${id} no encontrado`);
+      throw new NotFoundException(`Etnia con ID ${id} no encontrado`);
     }
   }
 }

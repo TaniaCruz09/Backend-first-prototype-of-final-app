@@ -4,8 +4,6 @@ import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm';
 import { Seccion } from '../entities/seccion.entity';
 
-
-
 @Injectable()
 export class SeccionService {
   constructor(

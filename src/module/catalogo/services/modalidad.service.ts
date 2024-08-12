@@ -4,8 +4,6 @@ import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm';
 import { Modalidad } from '../entities/modalidad.entity';
 
-
-
 @Injectable()
 export class ModalidadService {
   constructor(

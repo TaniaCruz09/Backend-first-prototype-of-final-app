@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Etnia } from '../entities/etnia.entity';
 
 
+
 @Injectable()
 export class EtniaService {
   constructor(

@@ -1,8 +1,8 @@
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
-import { GenderEntity } from "../entities/gender.entity";
 import { GenderDto } from "../dtos/gender.dto";
+import { GenderEntity } from "../entities/gender.entity";
 
 
 @Injectable()

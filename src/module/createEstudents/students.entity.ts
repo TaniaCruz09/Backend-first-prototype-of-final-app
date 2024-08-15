@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Pais } from "../catalogo";
 
 @Entity()
-export class Student{
+export class StudentEntity{
     @PrimaryGeneratedColumn()
     id:string;
 
@@ -16,4 +17,8 @@ export class Student{
 
     @Column()
     studentCode: string;
+
+    @OneToOne(()=> Pais)
+    @JoinColumn({ name: 'nationality_id'})
+    nationality: Pais
 }

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {StudentEntity } from "src/module/createEstudents/students.entity";
+import { Column, Entity, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Pais {
@@ -12,4 +13,7 @@ export class Pais {
             name: 'pais',
         })
     pais: string
+
+    @OneToOne(()=> StudentEntity, (student)=> student.id)
+    student: StudentEntity;
 }

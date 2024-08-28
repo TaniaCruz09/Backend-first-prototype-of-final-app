@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Docentes } from "../../docentes/docentes.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity('departamento')
 export class Departamento {
     @PrimaryGeneratedColumn()
     id: number;
@@ -12,4 +13,7 @@ export class Departamento {
             name: 'departamento',
         })
     departamento: string
+
+    @OneToOne(()=> Docentes, (docente)=> docente.departamento)
+    docente?: Docentes;
 }

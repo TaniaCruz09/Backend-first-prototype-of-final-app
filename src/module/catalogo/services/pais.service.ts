@@ -10,7 +10,7 @@ export class PaisService {
         private paisRepository: Repository<Pais>,
     ) {}
 
-    async create(pais: Pais): Promise<Pais> {
+    async createPais(pais: Pais): Promise<Pais> {
         return await this.paisRepository.save(pais);
     }
 

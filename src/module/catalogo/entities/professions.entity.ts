@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Docentes } from "../../docentes/docentes.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity({ name: 'professions'})
@@ -15,5 +16,8 @@ export class ProfessionsEntity{
         length:100
     })
     profession:string
+
+    @ManyToOne(()=> Docentes, (docente)=> docente.profesion)
+    docente:Docentes;
 
 }

@@ -4,12 +4,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './module/database/database.module';
 import { CatalogoModule } from './module/catalogo/catalogo.module';
+import { DocentesModule } from './module/docentes/docentes.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     envFilePath: '.env',
     isGlobal: true,
-  }), DatabaseModule,  CatalogoModule],
+  }), DatabaseModule,  CatalogoModule, DocentesModule],
   controllers: [AppController],
   providers: [AppService],
 })

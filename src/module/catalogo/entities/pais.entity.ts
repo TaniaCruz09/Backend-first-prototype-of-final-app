@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Docentes } from "../../docentes/docentes.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Pais {
@@ -12,4 +13,7 @@ export class Pais {
             name: 'pais',
         })
     pais: string
+
+    @OneToOne(()=> Docentes, (docente)=> docente.pais)
+    docente?: Docentes;
 }

@@ -7,6 +7,16 @@ import { createPaisDto } from '../dtos/pais.dto';
     export class PaisController {
     constructor(private readonly paisService: PaisService) {}
 
+    @Post('/')
+    async createPais(@Body() payload: createPaisDto){
+        const pais = await this.paisService.createPais(payload);
+        const data = {
+        data: pais,
+        message: 'ok',
+        };
+        return data;
+    }
+
     @Get('/')
     async findAll() {
         const pais = await this.paisService.findAll();
@@ -20,16 +30,6 @@ import { createPaisDto } from '../dtos/pais.dto';
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number) {
         const pais = await this.paisService.findOne(id);
-        const data = {
-        data: pais,
-        message: 'ok',
-        };
-        return data;
-    }
-
-    @Post('/')
-    async create(@Body() payload: createPaisDto){
-        const pais = await this.paisService.create(payload);
         const data = {
         data: pais,
         message: 'ok',

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Docentes } from "../../docentes/docentes.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity({ name: 'gender'})
@@ -15,5 +16,8 @@ export class GenderEntity{
         length:100
     })
     gender:string
+
+    @OneToOne(() => Docentes, (docente) => docente.sexo)
+    docente: Docentes;
 
 }

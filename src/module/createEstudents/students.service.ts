@@ -19,14 +19,14 @@ export class StudentService{
     }
     async getStudent():Promise<StudentEntity[]>{
         return await this.StudentRepo.find({
-            relations: ['pais','gender']    
+            relations: ['pais','gender','departamento','municipio']    
         });
     }
 
     async getStudentById(id: number): Promise <StudentEntity> {
         const student = await this.StudentRepo.findOne({
             where: {id},
-            relations: ['pais','gender']  
+            relations: ['pais','gender','departamento','municipio']  
         });
         if (!student) {
             throw new NotFoundException(`Estudiante con ID ${id} no encontrado`);

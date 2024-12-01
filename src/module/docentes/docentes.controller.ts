@@ -10,8 +10,10 @@ import {
 } from '@nestjs/common';
 import { DocentesService } from './docentes.service';
 import { DocentesDTO } from './docentes.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Docentes')
+@ApiBearerAuth()
 @Controller('docentes')
 export class DocenteController {
   constructor(private readonly registroService: DocentesService) {}

@@ -3,14 +3,15 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './module/database/database.module';
-import { CatalogoModule } from './module/catalogo/catalogo.module';
+import { CatalogoModule } from './module/catalogos/catalogo.module';
 import { DocentesModule } from './module/docentes/docentes.module';
+import { AuthModule } from './module/auth/auth.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     envFilePath: '.env',
     isGlobal: true,
-  }), DatabaseModule,  CatalogoModule, DocentesModule],
+  }), DatabaseModule,  CatalogoModule, DocentesModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,5 +1,5 @@
 import { IsArray, IsDate, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, MaxLength } from "class-validator";
-import { AcademicLevelEntity, Departamento, GenderEntity, Municipio, Pais, ProfessionsEntity } from "../catalogo";
+import { AcademicLevelEntity, Departamento, GenderEntity, Municipio, Pais, ProfessionsEntity } from "../catalogos";
 
 export class DocentesDTO {
     @IsOptional()

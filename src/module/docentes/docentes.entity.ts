@@ -1,5 +1,5 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { AcademicLevelEntity, Departamento, GenderEntity, Municipio, Pais, ProfessionsEntity } from "../catalogo";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { AcademicLevelEntity, Departamento, GenderEntity, Municipio, Pais, ProfessionsEntity } from "../catalogos";
 
 @Entity({name: 'docentes'})
 export class Docentes {
@@ -37,14 +37,36 @@ export class Docentes {
     })
     cedula_identidad: string;
 
-    @OneToOne(() => GenderEntity, (gender) => gender.docente)
+    @ManyToOne(() => GenderEntity, (gender) => gender.docente)
     @JoinColumn()
     sexo: GenderEntity;
 
-    @OneToMany(()=> AcademicLevelEntity, (academiclevel)=> academiclevel.docente)
+    @ManyToMany(()=> AcademicLevelEntity, (academiclevel)=> academiclevel.docente)
+        @JoinTable({
+            name: 'docente-nivelAcademico', // Nombre de la tabla de unión
+            joinColumn: {
+              name: 'maestro_id',
+              referencedColumnName: 'id',
+            },
+            inverseJoinColumn: {
+              name: 'profesion_id',
+              referencedColumnName: 'id',
+            },
+          })
     nivel_academico: AcademicLevelEntity[];
 
-    @OneToMany(()=> ProfessionsEntity, (profesion)=> profesion.docente)
+    @ManyToMany(()=> ProfessionsEntity, (profesion)=> profesion.docente)
+    @JoinTable({
+        name: 'docente-profesiones', // Nombre de la tabla de unión
+        joinColumn: {
+          name: 'maestro_id',
+          referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+          name: 'profesion_id',
+          referencedColumnName: 'id',
+        },
+      })
     profesion: ProfessionsEntity[];
 
     @Column({
@@ -60,15 +82,15 @@ export class Docentes {
     })
     fecha_nacimiento: Date
     
-    @OneToOne(()=> Pais, (pais)=> pais.docente)
+    @ManyToOne(()=> Pais, (pais)=> pais.docente)
     @JoinColumn()
     pais: Pais
 
-    @OneToOne(()=> Departamento, (departamento)=> departamento.docente)
+    @ManyToOne(()=> Departamento, (departamento)=> departamento.docente)
     @JoinColumn()
     departamento: Departamento;
 
-    @OneToOne(()=> Municipio, (municipio)=> municipio.docente)
+    @ManyToOne(()=> Municipio, (municipio)=> municipio.docente)
     @JoinColumn()
     municipio: Municipio;
 

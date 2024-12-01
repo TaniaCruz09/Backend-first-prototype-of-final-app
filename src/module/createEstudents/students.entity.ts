@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Departamento, GenderEntity, Municipio, Pais } from "../catalogo";
+import { Departamento, GenderEntity, Municipio, Pais } from "../catalogos";
+
 
 @Entity({ name: 'student'})
 export class StudentEntity{

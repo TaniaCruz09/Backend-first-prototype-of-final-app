@@ -1,6 +1,6 @@
 import { IsDate, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, MaxLength, maxLength } from "class-validator";
-import { Departamento, GenderDto, GenderEntity, Municipio, Pais } from "../catalogo";
 import { Unique } from "typeorm";
+import { Departamento, GenderEntity, Municipio, Pais } from "../catalogos";
 
 
 export class StudentsDto {

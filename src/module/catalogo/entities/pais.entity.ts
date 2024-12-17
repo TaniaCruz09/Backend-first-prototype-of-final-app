@@ -1,5 +1,6 @@
+import { StudentEntity } from "src/module/createEstudents/students.entity";
 import { Docentes } from "../../docentes/docentes.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Pais {
@@ -16,4 +17,7 @@ export class Pais {
 
     @OneToOne(()=> Docentes, (docente)=> docente.pais)
     docente?: Docentes;
+
+    @OneToMany(()=> StudentEntity, (student)=> student.pais)
+    student?: StudentEntity;
 }

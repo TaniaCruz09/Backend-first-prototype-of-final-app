@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
-@Entity({ name: 'grades'})
+@Entity('catalogos.grades')
 export class GradesEntity{
     @PrimaryGeneratedColumn({
         name: 'id',

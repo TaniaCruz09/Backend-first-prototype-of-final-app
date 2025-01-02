@@ -2,7 +2,7 @@ import { StudentEntity } from "src/module/createEstudents/students.entity";
 import { Docentes } from "../../docentes/docentes.entity";
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity('catalogos.pais')
 export class Pais {
     @PrimaryGeneratedColumn()
     id: number;

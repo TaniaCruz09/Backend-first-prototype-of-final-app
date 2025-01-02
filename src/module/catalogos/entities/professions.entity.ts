@@ -2,7 +2,7 @@ import { Docentes } from "../../docentes/docentes.entity";
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
-@Entity('catalogos.professions')
+@Entity({schema: 'catalogos', name: 'professions'})
 export class ProfessionsEntity{
     @PrimaryGeneratedColumn({
         name: 'id',

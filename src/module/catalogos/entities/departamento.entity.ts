@@ -2,7 +2,7 @@ import { StudentEntity } from "src/module/createEstudents";
 import { Docentes } from "../../docentes/docentes.entity";
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('catalogos.departamento')
+@Entity({ schema: 'catalogos', name: 'departamento'})
 export class Departamento {
     @PrimaryGeneratedColumn()
     id: number;

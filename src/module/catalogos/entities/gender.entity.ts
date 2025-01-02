@@ -3,7 +3,7 @@ import { Docentes } from "../../docentes/docentes.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
-@Entity('catalogos.gender')
+@Entity({schema: 'catalogos', name: 'gender'})
 export class GenderEntity{
     @PrimaryGeneratedColumn({
         name: 'id',

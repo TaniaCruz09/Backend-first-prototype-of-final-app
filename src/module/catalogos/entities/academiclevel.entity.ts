@@ -2,7 +2,7 @@ import { Docentes } from "../../docentes/docentes.entity";
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
-@Entity('catalogos.academicLevel')
+@Entity({ schema: 'catalogos', name: 'academicLevel' })
 export class AcademicLevelEntity{
     @PrimaryGeneratedColumn('increment', {
         name: 'id',

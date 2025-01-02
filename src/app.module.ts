@@ -7,12 +7,13 @@ import { CatalogoModule } from './module/catalogos/catalogo.module';
 import { DocentesModule } from './module/docentes/docentes.module';
 import { AuthModule } from './module/auth/auth.module';
 import { StudetnModule } from './module/createEstudents/students.module';
+import { CalificacionesModule } from './module/calificaciones/calificaciones.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     envFilePath: '.env',
     isGlobal: true,
-  }), DatabaseModule,  CatalogoModule, DocentesModule, AuthModule, StudetnModule],
+  }), DatabaseModule,  CatalogoModule, DocentesModule, AuthModule, StudetnModule, CalificacionesModule],
   controllers: [AppController],
   providers: [AppService],
 })

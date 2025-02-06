@@ -3,7 +3,7 @@ import { MunicipioService } from '../services/municipio.service';
 import { createMunicipioDto } from '../dtos/municipio.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-    @ApiTags('Municipio')
+    @ApiTags('municipio')
     @ApiBearerAuth()
     @Controller('municipio')
     export class MunicipioController {

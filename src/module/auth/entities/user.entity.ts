@@ -1,5 +1,6 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "./roles.entity";
+import * as bcrypt from 'bcrypt';
 
 @Entity({name: "users"})
 export class User {
@@ -24,4 +25,9 @@ export class User {
 
     @Column({name: 'is_active', type: 'boolean', nullable: false, default: true})
     isActive: boolean;
+
+    @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 }

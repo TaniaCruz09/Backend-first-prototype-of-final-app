@@ -22,9 +22,20 @@ import { UserService } from './users.service';
         const { password, ...user } = await this.usersServices.findByEmail(
           payload.email,
         );
+
+        const bcrypt = require('bcrypt');
+        const passwordIngresada = '12345678';
+        const passwordGuardada = '12345678>';
+
+        bcrypt.compare(passwordIngresada, passwordGuardada).then(console.log);
+
+        console.log('Contraseña ingresada:', payload.password);
+        console.log('Contraseña almacenada en BD:', password);
+
   
         //TODO: Comparar el password
         const isMatch: boolean = await bcrypt.compare(payload.password, password);
+        console.log('Resultado bcrypt.compare:', isMatch);
         if (!isMatch) {
           throw new UnauthorizedException('Credenciales inválidas');
         }

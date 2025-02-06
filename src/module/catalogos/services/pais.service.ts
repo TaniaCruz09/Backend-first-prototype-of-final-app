@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Pais } from "../entities/pais.entity";
 import { Repository } from "typeorm";
+import { AcademicLevelEntity } from "..";
 
 @Injectable()
 export class PaisService {
@@ -37,10 +38,10 @@ export class PaisService {
         return await this.paisRepository.save(pais);
     }
 
-    async delete(id: number): Promise<void> {
-        const result = await this.paisRepository.delete(id);
-        if (result.affected === 0) {
-            throw new NotFoundException(`Pais con ID ${id} no encontrado`);
-        }
+    async delete(id: number): Promise<Pais> {
+        const result = await this.paisRepository.findOne({
+            where: {id: id}
+        })
+       return await this.paisRepository.remove(result)
     }
 }

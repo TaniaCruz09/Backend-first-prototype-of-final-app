@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe } 
 import { MunicipioService } from '../services/municipio.service';
 import { createMunicipioDto } from '../dtos/municipio.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Utilities } from '../../../common/helpers/utilities';
 
     @ApiTags('municipio')
     @ApiBearerAuth()
@@ -11,32 +12,44 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
     @Get('/')
     async findAll() {
-        const municipio = await this.municipioService.findAll();
-        const data = {
-        data: municipio,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const municipio = await this.municipioService.findAll();
+            const data = {
+            data: municipio,
+            message: 'ok',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number) {
-        const municipio = await this.municipioService.findOne(id);
-        const data = {
-        data: municipio,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const municipio = await this.municipioService.findOne(id);
+            const data = {
+            data: municipio,
+            message: 'ok',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Post('/')
     async create(@Body() payload: createMunicipioDto){
-        const municipio = await this.municipioService.create(payload);
-        const data = {
-        data: municipio,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const municipio = await this.municipioService.create(payload);
+            const data = {
+            data: municipio,
+            message: 'Municipio creado correctamente',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Put('/:id')
@@ -44,21 +57,29 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
         @Param('id', ParseIntPipe) id: number, 
         @Body() payload: createMunicipioDto,
     ){
-        const municipio = await this.municipioService.update(id, payload);
-        const data = {
-        data: municipio,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const municipio = await this.municipioService.update(id, payload);
+            const data = {
+            data: municipio,
+            message: 'Municipio actualizado correctamente',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Delete('/:id')
     async delete(@Param('id', ParseIntPipe) id: number) {
-        const municipio = await this.municipioService.delete(id);
-        const data = {
-        data: municipio,
-        message: 'ok',
-        };
-        return data; 
+        try {
+            const municipio = await this.municipioService.delete(id);
+            const data = {
+            data: municipio,
+            message: 'Municipio eliminado correctamente',
+            };
+            return data; 
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
     }

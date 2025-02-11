@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from "@ne
 import { InjectRepository } from "@nestjs/typeorm";
 import { Asignatura } from "../entities/asignatura.entity";
 import { Repository } from "typeorm";
+import { Utilities } from "../../../common/helpers/utilities";
 
 @Injectable()
 export class AsignaturaService {
@@ -15,7 +16,7 @@ export class AsignaturaService {
         try {
             return await this.asignaturaRepository.save(asignatura);
         } catch (error) {
-            throw new InternalServerErrorException('Error al crear la asignatura', error.message)
+            Utilities.catchError (error)
         }
     }
 
@@ -23,34 +24,38 @@ export class AsignaturaService {
     async findOne (id: number): Promise<Asignatura> {
         try {
             const asignatura = await this.asignaturaRepository.findOne({where: { id }});
-            if (!asignatura) {
-                throw new NotFoundException(`Asignatura con ID ${id} no encontrado`);
-            }
             return asignatura;
         } catch (error){
-            throw error instanceof NotFoundException
+            Utilities.catchError (error)
         }
     }
 
     async findAll(): Promise<Asignatura[]> {
-        return await this.asignaturaRepository.find();
+        try {
+            return await this.asignaturaRepository.find();
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     async update(id: number, updateAsignaturaDTO: Partial<Asignatura>): Promise<Asignatura> {
-        const asignatura = await this.asignaturaRepository.preload({
-            id,
-            ...updateAsignaturaDTO,
-        });
-        if (!asignatura) {
-            throw new NotFoundException(`Asignatura con ID ${id} no encontrado`);
+        try {
+            const asignatura = await this.asignaturaRepository.preload({
+                id,
+                ...updateAsignaturaDTO,
+            });
+            return await this.asignaturaRepository.save(asignatura);
+        } catch (error) {
+            Utilities.catchError (error)
         }
-        return await this.asignaturaRepository.save(asignatura);
     }
 
     async delete(id: number): Promise<void> {
-        const result = await this.asignaturaRepository.delete(id);
-        if (result.affected === 0) {
-            throw new NotFoundException(`Asignatura con ID ${id} no encontrado`);
+        try {
+            const result = await this.asignaturaRepository.delete(id);
+        } catch (error) {
+            Utilities.catchError (error)
         }
+        
     }
 }

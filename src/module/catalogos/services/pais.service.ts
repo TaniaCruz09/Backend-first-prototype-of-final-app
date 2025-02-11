@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Pais } from "../entities/pais.entity";
 import { Repository } from "typeorm";
 import { AcademicLevelEntity } from "..";
+import { Utilities } from "../../../common/helpers/utilities";
 
 @Injectable()
 export class PaisService {
@@ -12,36 +13,50 @@ export class PaisService {
     ) {}
 
     async createPais(pais: Pais): Promise<Pais> {
-        return await this.paisRepository.save(pais);
+        try {
+            return await this.paisRepository.save(pais);
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     async findOne (id: number): Promise<Pais> {
-        const pais = await this.paisRepository.findOne({where: { id }});
-        if (!pais) {
-            throw new NotFoundException(`Pais con ID ${id} no encontrado`);
+        try {
+            const pais = await this.paisRepository.findOne({where: { id }});
+            return pais;
+        } catch (error) {
+            Utilities.catchError (error)
         }
-        return pais;
     }
 
     async findAll(): Promise<Pais[]> {
-        return await this.paisRepository.find();
+        try {
+            return await this.paisRepository.find();
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     async update(id: number, updatePaisDTO: Partial<Pais>): Promise<Pais> {
-        const pais = await this.paisRepository.preload({
-            id,
-            ...updatePaisDTO,
-        });
-        if (!pais) {
-            throw new NotFoundException(`Pais con ID ${id} no encontrado`);
+        try {
+            const pais = await this.paisRepository.preload({
+                id,
+                ...updatePaisDTO,
+            });
+            return await this.paisRepository.save(pais);
+        } catch (error) {
+            Utilities.catchError (error)
         }
-        return await this.paisRepository.save(pais);
     }
 
     async delete(id: number): Promise<Pais> {
-        const result = await this.paisRepository.findOne({
-            where: {id: id}
-        })
-       return await this.paisRepository.remove(result)
+        try {
+            const result = await this.paisRepository.findOne({
+                where: {id: id}
+            })
+            return await this.paisRepository.remove(result)
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 }

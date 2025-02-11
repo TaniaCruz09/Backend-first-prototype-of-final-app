@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe, H
 import { AsignaturaService } from '../services/asignatura.service';
 import { createAsignaturaDto } from '../dtos/asignatura.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Utilities } from '../../../common/helpers/utilities';
 
 @ApiTags('asignatura')
 @ApiBearerAuth()
@@ -19,13 +20,7 @@ export class AsignaturaController {
             };
             return data;
         } catch (error) {
-            throw new HttpException(
-                {
-                    message: 'Error al obtener datos',
-                    details: error.message,
-                },
-                HttpStatus.INTERNAL_SERVER_ERROR,
-            );
+            Utilities.catchError (error)
         }
     }
 
@@ -39,13 +34,7 @@ export class AsignaturaController {
             };
             return data;
         } catch (error) {
-            throw new HttpException(
-                {
-                    message: 'Error al obtener datos',
-                    details: error.message,
-                },
-                HttpStatus.INTERNAL_SERVER_ERROR,
-            );
+            Utilities.catchError (error)
         }
     }
 
@@ -55,17 +44,11 @@ export class AsignaturaController {
             const asignatura = await this.asignaturaService.create(payload);
             const data = {
                 data: asignatura,
-                message: 'Asignatura agregada correctamente',
+                message: 'Asignatura creada correctamente',
             };
             return data;
         } catch (error) {
-            throw new HttpException(
-                {
-                    message: 'Error al crear registro de asignatura',
-                    details: error.message,
-                },
-                HttpStatus.BAD_REQUEST,
-            );
+            Utilities.catchError (error)
         }
     }
 
@@ -82,13 +65,7 @@ export class AsignaturaController {
             };
             return data;
         } catch (error) {
-            throw new HttpException(
-                {
-                    message: 'Error al actualizar el registro de asignatura',
-                    details: error.message,
-                },
-                HttpStatus.BAD_REQUEST,
-            );
+            Utilities.catchError (error)
         }
     }
 
@@ -102,13 +79,7 @@ export class AsignaturaController {
             };
             return data;
         } catch (error) {
-            throw new HttpException(
-                {
-                    message: 'Error al eliminar el registro de asignatura',
-                    details: error.message,
-                },
-                HttpStatus.INTERNAL_SERVER_ERROR,
-            );
+            Utilities.catchError (error)
         }
     }
 }

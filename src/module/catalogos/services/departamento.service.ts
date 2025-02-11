@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Departamento } from "../entities/departamento.entity";
 import { Repository } from "typeorm";
+import { Utilities } from "../../../common/helpers/utilities";
 
 
 @Injectable()
@@ -12,36 +13,48 @@ export class DepartamentoService {
     ) {}
 
     async create(departamento: Departamento): Promise<Departamento> {
-        return await this.departamentoRepository.save(departamento);
+        try {
+            return await this.departamentoRepository.save(departamento);
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     async findOne (id: number): Promise<Departamento> {
-        const departamento = await this.departamentoRepository.findOne({where: { id }});
-        if (!departamento) {
-            throw new NotFoundException(`Departamento con ID ${id} no encontrado`);
+        try {
+            const departamento = await this.departamentoRepository.findOne({where: { id }});
+            return departamento;
+        } catch (error) {
+            Utilities.catchError (error)
         }
-        return departamento;
     }
 
     async findAll(): Promise<Departamento[]> {
-        return await this.departamentoRepository.find();
+        try {
+            return await this.departamentoRepository.find();
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     async update(id: number, updateDepartamentoDTO: Partial<Departamento>): Promise<Departamento> {
-        const departamento = await this.departamentoRepository.preload({
-            id,
-            ...updateDepartamentoDTO,
-        });
-        if (!departamento) {
-            throw new NotFoundException(`Departamento con ID ${id} no encontrado`);
+        try {
+            const departamento = await this.departamentoRepository.preload({
+                id,
+                ...updateDepartamentoDTO,
+            });
+            return await this.departamentoRepository.save(departamento);
+        } catch (error) {
+            Utilities.catchError (error)
         }
-        return await this.departamentoRepository.save(departamento);
     }
 
     async delete(id: number): Promise<void> {
-        const result = await this.departamentoRepository.delete(id);
-        if (result.affected === 0) {
-            throw new NotFoundException(`Departamento con ID ${id} no encontrado`);
+        try {
+            const result = await this.departamentoRepository.delete(id);
+            
+        } catch (error) {
+            Utilities.catchError (error)
         }
     }
 }

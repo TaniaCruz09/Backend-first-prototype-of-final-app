@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe } 
 import { DepartamentoService } from '../services/departamento.service';
 import { createDepartamentoDto } from '../dtos/departamento.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Utilities } from '../../../common/helpers/utilities';
 
 
     @ApiTags('Departamento')
@@ -12,32 +13,44 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
     @Get('/')
     async findAll() {
-        const departamento = await this.departamentoService.findAll();
-        const data = {
-        data: departamento,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const departamento = await this.departamentoService.findAll();
+            const data = {
+            data: departamento,
+            message: 'ok',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number) {
-        const departamento = await this.departamentoService.findOne(id);
-        const data = {
-        data: departamento,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const departamento = await this.departamentoService.findOne(id);
+            const data = {
+            data: departamento,
+            message: 'ok',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Post('/')
     async create(@Body() payload: createDepartamentoDto){
-        const departamento = await this.departamentoService.create(payload);
-        const data = {
-        data: departamento,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const departamento = await this.departamentoService.create(payload);
+            const data = {
+            data: departamento,
+            message: 'Departamento creado correctamente',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Put('/:id')
@@ -45,21 +58,29 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
         @Param('id', ParseIntPipe) id: number, 
         @Body() payload: createDepartamentoDto,
     ){
-        const departamento = await this.departamentoService.update(id, payload);
-        const data = {
-        data: departamento,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const departamento = await this.departamentoService.update(id, payload);
+            const data = {
+            data: departamento,
+            message: 'Departamento actualizado correctamente',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Delete('/:id')
     async delete(@Param('id', ParseIntPipe) id: number) {
-        const departamento = await this.departamentoService.delete(id);
-        const data = {
-        data: departamento,
-        message: 'ok',
-        };
-        return data; 
+        try {
+            const departamento = await this.departamentoService.delete(id);
+            const data = {
+            data: departamento,
+            message: 'Departamento eliminado correctamente',
+            };
+            return data; 
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
     }

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe } 
 import { PaisService } from '../services/pais.service';
 import { createPaisDto } from '../dtos/pais.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Utilities } from '../../../common/helpers/utilities';
 
     @ApiTags('Pais')
     @ApiBearerAuth()
@@ -11,22 +12,30 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
     @Post('/')
     async createPais(@Body() payload: createPaisDto){
-        const pais = await this.paisService.createPais(payload);
-        const data = {
-        data: pais,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const pais = await this.paisService.createPais(payload);
+            const data = {
+            data: pais,
+            message: 'Pais agregado correctamente',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Get('/')
     async findAll() {
-        const pais = await this.paisService.findAll();
-        const data = {
-        data: pais,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const pais = await this.paisService.findAll();
+            const data = {
+            data: pais,
+            message: 'ok',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Get(':id')
@@ -44,21 +53,29 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
         @Param('id', ParseIntPipe) id: number, 
         @Body() payload: createPaisDto,
     ){
-        const pais = await this.paisService.update(id, payload);
-        const data = {
-        data: pais,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const pais = await this.paisService.update(id, payload);
+            const data = {
+            data: pais,
+            message: 'Pais actualizado correctamente',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     @Delete('/:id')
     async delete(@Param('id', ParseIntPipe) id: number) {
-        const pais = await this.paisService.delete(id);
-        const data = {
-        data: pais,
-        message: 'ok',
-        };
-        return data;
+        try {
+            const pais = await this.paisService.delete(id);
+            const data = {
+            data: pais,
+            message: 'Pais eliminado correctamente',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
     }

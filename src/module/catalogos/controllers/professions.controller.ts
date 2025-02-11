@@ -35,26 +35,36 @@ export class ProfessionsController{
    
     @Get('/')
     async getProfessions() {
-    const profession = await this.professionsService.getProfessions();
-    const data = {
-      data: profession,
-      message: 'Ok',
-    };
+      try{
 
-    return data;
+        const profession = await this.professionsService.getProfessions();
+        const data = {
+          data: profession,
+          message: 'Ok',
+        };
+    
+        return data;
+      }catch(error){
+        Utilities.catchError(error)
+      }
   }
   
 
   @Get('/:id')
   async getProfessionsById(@Param('id', ParseIntPipe) id: number) {
-    const profession = await this.professionsService.getProfessionsById(id);
+    try{
 
-    const data = {
-      data: profession,
-      message: 'Ok',
-    };
-
-    return data;
+      const profession = await this.professionsService.getProfessionsById(id);
+  
+      const data = {
+        data: profession,
+        message: 'Ok',
+      };
+  
+      return data;
+    }catch(error){
+      Utilities.catchError(error)
+    }
   }
 
   @Put('/:id')
@@ -62,27 +72,35 @@ export class ProfessionsController{
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: ProfessionsDto,
   ) {
-    const profession = await this.professionsService.updateProfession(id, payload);
+    try{
 
-    const data = {
-      data: profession,
-    };
-
-    return data;
+      const profession = await this.professionsService.updateProfession(id, payload);
+  
+      const data = {
+        data: profession,
+      };
+  
+      return data;
+    }catch(error){
+      Utilities.catchError(error)
+    }
   }
 
   @Delete('/:id')
   async deleteProfession(@Param('id', ParseIntPipe) id: number) {
-    const profession = await this.professionsService.deleteProfession(id);
+    try{
 
-    const data = {
-      data: profession,
-      message: 'Profession deleted',
-    };
-
-    return data;
+      const profession = await this.professionsService.deleteProfession(id);
+  
+      const data = {
+        data: profession,
+        message: 'Profession deleted',
+      };
+  
+      return data;
+    }catch(error){
+      Utilities.catchError(error)
+    }
   }
-
-
 
 }

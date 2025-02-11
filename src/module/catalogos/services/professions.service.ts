@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProfessionsDto } from "../dtos/professions.dto";
 import { ProfessionsEntity } from "../entities/professions.entity";
+import { Utilities } from "src/common/helpers/utilities";
 
 @Injectable()
 export class ProfessionsService{
@@ -12,39 +13,60 @@ export class ProfessionsService{
       ) {}
 
       async created(payload: ProfessionsDto) {
-        const profession = await this.ProfessionsRepo.create(payload);
-        return await this.ProfessionsRepo.save(profession);
+        try{
+          const profession = await this.ProfessionsRepo.create(payload);
+          return await this.ProfessionsRepo.save(profession);
+        }catch(error){
+          Utilities.catchError(error)
+        }
       }
 
     
       async getProfessions(){
-        const profession = await this.ProfessionsRepo.find();
-        console.log(profession)
-        return profession;
+        try{
+          const profession = await this.ProfessionsRepo.find();
+          console.log(profession)
+          return profession;
+        }catch(error){
+          Utilities.catchError(error)
+        }
         
       }
       
 
       async getProfessionsById(id: number): Promise<ProfessionsEntity> {
-        const profession = await this.ProfessionsRepo.findOne({
-          where: { id },
-        });
-    
-        return profession;
+        try{
+          const profession = await this.ProfessionsRepo.findOne({
+            where: { id },
+          });
+      
+          return profession;
+        }catch(error){
+          Utilities.catchError(error)
+        }
       }
 
       async updateProfession(id:number, payload:ProfessionsDto ): Promise<ProfessionsEntity>{
-        const profession = await this.ProfessionsRepo.preload({id, ...payload });
-        return await this.ProfessionsRepo.save(profession)
+        try{
+
+          const profession = await this.ProfessionsRepo.preload({id, ...payload });
+          return await this.ProfessionsRepo.save(profession)
+        }catch(error){
+          Utilities.catchError(error)
+        }
       }
 
       async deleteProfession (id:number): Promise<ProfessionsEntity> {
-        const profession = await this.ProfessionsRepo.findOne({
-          where: {id: id}
-        });
-        
-        return await this.ProfessionsRepo.remove(profession);
-      }
+        try{
 
+          const profession = await this.ProfessionsRepo.findOne({
+            where: {id: id}
+          });
+          
+          return await this.ProfessionsRepo.remove(profession);
+        }catch(error){
+          Utilities.catchError(error)
+        }
+      }
 
 }

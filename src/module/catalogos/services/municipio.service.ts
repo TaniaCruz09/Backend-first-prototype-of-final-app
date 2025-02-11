@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Municipio } from "../entities/municipio.entity";
 import { Repository } from "typeorm";
+import { Utilities } from "../../../common/helpers/utilities";
 
 @Injectable()
 export class MunicipioService {
@@ -11,36 +12,47 @@ export class MunicipioService {
     ) {}
 
     async create(municipio: Municipio): Promise<Municipio> {
-        return await this.municipioRepository.save(municipio);
+        try {
+            return await this.municipioRepository.save(municipio);
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     async findOne (id: number): Promise<Municipio> {
-        const municipio = await this.municipioRepository.findOne({where: { id }});
-        if (!municipio) {
-            throw new NotFoundException (`Municipio con ID ${id} no encontrado`);
+        try {
+            const municipio = await this.municipioRepository.findOne({where: { id }});
+            return municipio;
+        } catch (error) {
+            Utilities.catchError (error)
         }
-        return municipio;
     }
 
     async findAll(): Promise<Municipio[]> {
-        return await this.municipioRepository.find();
+        try {
+            return await this.municipioRepository.find();
+        } catch (error) {
+            Utilities.catchError (error)
+        }
     }
 
     async update(id: number, updateMunicipioDTO: Partial<Municipio>): Promise<Municipio> {
-        const municipio = await this.municipioRepository.preload({
-            id,
-            ...updateMunicipioDTO,
-        });
-        if (!municipio) {
-            throw new NotFoundException(`Municipio con ID ${id} no encontrado`);
+        try {
+            const municipio = await this.municipioRepository.preload({
+                id,
+                ...updateMunicipioDTO,
+            });
+            return await this.municipioRepository.save(municipio);
+        } catch (error) {
+            Utilities.catchError (error)
         }
-        return await this.municipioRepository.save(municipio);
     }
 
     async delete(id: number): Promise<void> {
-        const result = await this.municipioRepository.delete(id);
-        if (result.affected === 0) {
-            throw new NotFoundException(`Municipio con ID ${id} no encontrado`);
+        try {
+            const result = await this.municipioRepository.delete(id);
+        } catch (error) {
+            Utilities.catchError (error)
         }
     }
 }

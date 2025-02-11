@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { AcademicLevelDto } from "../dtos/academiclevel.dto";
 import { AcademicLevelEntity } from "../entities/academiclevel.entity";
+import { Utilities } from "src/common/helpers/utilities";
 
 @Injectable()
 export class AcademicLevelService {
@@ -15,8 +16,8 @@ export class AcademicLevelService {
     try {
       const academicLevel = this.AcademicLevelRepo.create(payload);
       return await this.AcademicLevelRepo.save(academicLevel);
-    } catch (error) {
-      throw new InternalServerErrorException('Error al Crear el Nivel Academico', error.message);
+    } catch(error){
+      Utilities.catchError(error)
     }
   }
 
@@ -25,44 +26,35 @@ export class AcademicLevelService {
       const academicLevels = await this.AcademicLevelRepo.find();
       console.log(academicLevels);
       return academicLevels;
-    } catch (error) {
-      throw new InternalServerErrorException('Error fetching academic levels', error.message);
+    }catch(error){
+      Utilities.catchError(error)
     }
   }
 
   async getAcademicLevelById(id: number): Promise<AcademicLevelEntity> {
     try {
       const academicLevel = await this.AcademicLevelRepo.findOne({ where: { id } });
-      if (!academicLevel) {
-        throw new NotFoundException(`Academic level with ID ${id} not found`);
-      }
       return academicLevel;
-    } catch (error) {
-      throw error instanceof NotFoundException ? error : new InternalServerErrorException('Error fetching academic level by ID', error.message);
+    }catch(error){
+      Utilities.catchError(error)
     }
   }
 
   async updateAcademicLevel(id: number, payload: AcademicLevelDto): Promise<AcademicLevelEntity> {
     try {
       const academicLevel = await this.AcademicLevelRepo.preload({ id, ...payload });
-      if (!academicLevel) {
-        throw new NotFoundException(`Academic level with ID ${id} not found`);
-      }
       return await this.AcademicLevelRepo.save(academicLevel);
-    } catch (error) {
-      throw error instanceof NotFoundException ? error : new InternalServerErrorException('Error updating academic level', error.message);
+    } catch(error){
+      Utilities.catchError(error)
     }
   }
 
   async deleteAcademicLevel(id: number): Promise<AcademicLevelEntity> {
     try {
       const academicLevel = await this.AcademicLevelRepo.findOne({ where: { id } });
-      if (!academicLevel) {
-        throw new NotFoundException(`Academic level with ID ${id} not found`);
-      }
       return await this.AcademicLevelRepo.remove(academicLevel);
-    } catch (error) {
-      throw error instanceof NotFoundException ? error : new InternalServerErrorException('Error deleting academic level', error.message);
+    } catch(error){
+      Utilities.catchError(error)
     }
   }
 }

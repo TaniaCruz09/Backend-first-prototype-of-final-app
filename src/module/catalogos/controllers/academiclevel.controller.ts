@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseI
 import { AcademicLevelService } from "../services/academiclevel.service";
 import { AcademicLevelDto } from "../dtos/academiclevel.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Utilities } from "src/common/helpers/utilities";
 
 
 @ApiTags('catalogo/academiclevel')
@@ -19,15 +20,9 @@ export class AcademicLevelController{
                 message: 'creado correctamente',
             };
             return data;
-        }catch (error) {
-            throw new HttpException(
-                {
-                    status: HttpStatus.INTERNAL_SERVER_ERROR,
-                    error: 'No se pudo crear el nivel académico',
-                },
-                HttpStatus.INTERNAL_SERVER_ERROR,
-            );
-        }
+        }catch(error){
+            Utilities.catchError(error)
+          }
     }
 
     @Get('/academiclevel')
@@ -39,15 +34,9 @@ export class AcademicLevelController{
                 message: 'ok',
             };
             return data;
-        } catch (error) {
-            throw new HttpException(
-                {
-                    status: HttpStatus.INTERNAL_SERVER_ERROR,
-                    error: 'No se pudieron obtener los niveles académicos',
-                },
-                HttpStatus.INTERNAL_SERVER_ERROR,
-            );
-        }
+        } catch(error){
+            Utilities.catchError(error)
+          }
     }
 
     
@@ -55,30 +44,14 @@ export class AcademicLevelController{
     async getAcademicLevelById(@Param('id', ParseIntPipe) id: number){
         try {
             const academicLevel = await this.academicLevelService.getAcademicLevelById(id);
-            if (!academicLevel) {
-                throw new HttpException(
-                    {
-                        status: HttpStatus.NOT_FOUND,
-                        error: 'Nivel académico no encontrado',
-                    },
-                    HttpStatus.NOT_FOUND
-                );
-            }
             const data = {
                 data:academicLevel,
                 message: 'Nivel Academico encontrado',
             };
             return data;
-        } catch (error) {
-            throw new HttpException(
-                {
-                    status: error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-                    error: error.response?.error || 'No se pudo obtener el nivel académico',
-                },
-                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-            );
-        }
-        
+        }catch(error){
+            Utilities.catchError(error)
+          }   
     }
 
     @Put('/academiclevel/:id')
@@ -88,57 +61,27 @@ export class AcademicLevelController{
     ) {
         try {
             const academicLevel = await this.academicLevelService.updateAcademicLevel(id, payload);
-            if (!academicLevel) {
-                throw new HttpException(
-                    {
-                        status: HttpStatus.NOT_FOUND,
-                        error: 'Nivel académico no encontrado',
-                    },
-                    HttpStatus.NOT_FOUND,
-                );
-            }
             const data = {
                 data: academicLevel,
                 message: 'ok',
             };
             return data;
-        } catch (error) {
-            throw new HttpException(
-                {
-                    status: error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-                    error: error.response?.error || 'No se pudo actualizar el nivel académico',
-                },
-                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-            );
-        }
+        } catch(error){
+            Utilities.catchError(error)
+          }
     }
 
     @Delete('/academiclevel/:id')
     async deleteAcademicLevel(@Param('id', ParseIntPipe) id: number) {
         try {
             const academicLevel = await this.academicLevelService.deleteAcademicLevel(id);
-            if (!academicLevel) {
-                throw new HttpException(
-                    {
-                        status: HttpStatus.NOT_FOUND,
-                        error: 'Nivel académico no encontrado',
-                    },
-                    HttpStatus.NOT_FOUND,
-                );
-            }
             const data = {
                 data: academicLevel,
                 message: 'Etnia eliminado',
             };
             return data;
-        } catch (error) {
-            throw new HttpException(
-                {
-                    status: error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-                    error: error.response?.error || 'No se pudo eliminar el nivel académico',
-                },
-                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-            );
-        }
+        }catch(error){
+            Utilities.catchError(error)
+          }
     }
 }

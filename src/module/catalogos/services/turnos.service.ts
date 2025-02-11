@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm';
 import { Turno } from '../entities/turnos.entity';
+import { Utilities } from '../../../common/helpers/utilities';
 
 
 
@@ -14,37 +15,50 @@ export class TurnoService {
   ) {}
 
   async create(turno: Turno): Promise<Turno> {
-    return await this.turnoRepository.save(turno);
+    try{
+      return await this.turnoRepository.save(turno);
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   async findOne(id: number): Promise<Turno> {
-    const turno = await this.turnoRepository.findOne({ where: { id } });
-    if (!turno) {
-      throw new NotFoundException(`Turno con ID ${id} no encontrado`);
+    try{
+      const turno = await this.turnoRepository.findOne({ where: { id } });
+      return turno;
+    } catch (error) {
+      Utilities.catchError(error);
     }
-    return turno;
   }
 
   async findAll(): Promise<Turno[]> {
-    return await this.turnoRepository.find();
+    try{
+      return await this.turnoRepository.find();
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   async update(id: number, updateTurnoDTO: Partial<Turno>): Promise<Turno> {
-    const turno = await this.turnoRepository.preload({
-      id,
-      ...updateTurnoDTO,
-    });
-    if (!turno) {
-      throw new NotFoundException(`Turno con ID ${id} no encontrado`);
+    try{
+      const turno = await this.turnoRepository.preload({
+        id,
+        ...updateTurnoDTO,
+      });
+      return await this.turnoRepository.save(turno);
+    } catch (error) {
+      Utilities.catchError(error);
     }
-    return await this.turnoRepository.save(turno);
   }
 
   async delete(id: number): Promise<void> {
-    const result = await this.turnoRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Turno con ID ${id} no encontrado`);
-    }
+    try{
+      const result = await this.turnoRepository.delete(id);
+      // if (result.affected === 0) {
+      //   throw new NotFoundException(`Turno con ID ${id} no encontrado`);
+    } catch (error) {
+      Utilities.catchError(error);
+    } 
   }
 }
 

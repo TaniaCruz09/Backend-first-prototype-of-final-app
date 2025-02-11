@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm';
 import { Seccion } from '../entities/seccion.entity';
+import { Utilities } from '../../../common/helpers/utilities';
 
 @Injectable()
 export class SeccionService {
@@ -12,37 +13,48 @@ export class SeccionService {
   ) {}
 
   async create(seccion: Seccion): Promise<Seccion> {
-    return await this.seccionRepository.save(seccion);
+    try{
+      return await this.seccionRepository.save(seccion);
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   async findOne(id: number): Promise<Seccion> {
-    const seccion = await this.seccionRepository.findOne({ where: { id } });
-    if (!seccion) {
-      throw new NotFoundException(`Turno con ID ${id} no encontrado`);
+    try{
+      const seccion = await this.seccionRepository.findOne({ where: { id } });
+      return seccion;
+    } catch (error) {
+      Utilities.catchError(error);
     }
-    return seccion;
   }
 
   async findAll(): Promise<Seccion[]> {
-    return await this.seccionRepository.find();
+    try{
+      return await this.seccionRepository.find();
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   async update(id: number, updateEtniaDTO: Partial<Seccion>): Promise<Seccion> {
-    const seccion = await this.seccionRepository.preload({
-      id,
-      ...updateEtniaDTO,
-    });
-    if (!seccion) {
-      throw new NotFoundException(`Turno con ID ${id} no encontrado`);
+    try{
+      const seccion = await this.seccionRepository.preload({
+        id,
+        ...updateEtniaDTO,
+      });
+      return await this.seccionRepository.save(seccion);
+    } catch (error) {
+      Utilities.catchError(error);
     }
-    return await this.seccionRepository.save(seccion);
   }
 
   async delete(id: number): Promise<void> {
-    const result = await this.seccionRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Turno con ID ${id} no encontrado`);
-    }
+    try{
+      const result = await this.seccionRepository.delete(id);
+    } catch (error) {
+      Utilities.catchError(error);
+    }  
   }
 }
 

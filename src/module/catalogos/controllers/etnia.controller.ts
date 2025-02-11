@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe, H
 import { EtniaService } from '../services/etnia.service';
 import { createEtniaDto } from '../dtos/etnia.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Utilities } from '../../../common/helpers/utilities';
 
 @ApiTags('Etnia')
 @ApiBearerAuth()
@@ -19,43 +20,21 @@ export class EtniaController {
       };
       return data;
     } catch (error) {
-                throw new HttpException(
-                    {
-                        status: HttpStatus.INTERNAL_SERVER_ERROR,
-                        error: 'No se pudieron obtener las etnias',
-                    },
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                );
-            }
+      Utilities.catchError(error);
+    }
   }
 
   @Get('/:id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     try{
       const etnia = await this.etniaService.findOne(id);
-    
-    if(!etnia){
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: 'Etnia no encontrada',
-      },
-      HttpStatus.NOT_FOUND
-      )
-    }
-    const data = {
+      const data = {
       data: etnia,
       message: 'ok',
     };
     return data;
-  }catch(error){
-    throw new HttpException(
-      {
-          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-          error: error.response?.error || 'No se pudo obtener la etnia',
-      },
-      error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-  );
+  } catch (error) {
+    Utilities.catchError(error);
   }
 }
 
@@ -63,20 +42,14 @@ export class EtniaController {
   async create(@Body() payload: createEtniaDto){
     try{
       const etnia = await this.etniaService.create(payload);
-    const data = {
+      const data = {
       data: etnia,
       message: 'ok',
     };
     return data;
-    }catch(error){
-      throw new HttpException(
-        {
-            status: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'No se pudo crear la etnia',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-    );
-    }
+  } catch (error) {
+    Utilities.catchError(error);
+  }
   }
 
   @Put('/:id')
@@ -85,30 +58,15 @@ export class EtniaController {
     @Body() payload: createEtniaDto,
   ){
     try{
-      const etnia = await this.etniaService.update(id, payload);
-      if (!etnia) {
-        throw new HttpException(
-            {
-                status: HttpStatus.NOT_FOUND,
-                error: 'Etnia no encontrada',
-            },
-            HttpStatus.NOT_FOUND,
-        );
-    }
+    const etnia = await this.etniaService.update(id, payload);
     const data = {
       data: etnia,
       message: 'ok',
     };
     return data;
-  }catch(error) {
-    throw new HttpException(
-        {
-            status: error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-            error: error.response?.error || 'No se pudo actualizar la etnia ',
-        },
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-    );
-}
+  } catch (error) {
+    Utilities.catchError(error);
+  }
 }
 
   @Delete('/:id')
@@ -120,14 +78,8 @@ export class EtniaController {
       message: 'ok',
     };
     return data;
-    }catch (error) {
-      throw new HttpException(
-          {
-              status: error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-              error: error.response?.error || 'No se pudo eliminar la etnia',
-          },
-          error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+  } catch (error) {
+    Utilities.catchError(error);
   }
   }
 }

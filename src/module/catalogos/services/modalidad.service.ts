@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm';
 import { Modalidad } from '../entities/modalidad.entity';
+import { Utilities } from '../../../common/helpers/utilities';
 
 @Injectable()
 export class ModalidadService {
@@ -12,36 +13,51 @@ export class ModalidadService {
   ) {}
 
   async create(modalidad: Modalidad): Promise<Modalidad> {
-    return await this.modalidadRepository.save(modalidad);
+    try{
+      return await this.modalidadRepository.save(modalidad);
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   async findOne(id: number): Promise<Modalidad> {
-    const modalidad = await this.modalidadRepository.findOne({ where: { id } });
-    if (!modalidad) {
-      throw new NotFoundException(`modalidad con ID ${id} no encontrado`);
+    try{
+      const modalidad = await this.modalidadRepository.findOne({ where: { id } });
+      // if (!modalidad) {
+      //   throw new NotFoundException(`modalidad con ID ${id} no encontrado`);
+      // }
+      return modalidad;
+    } catch (error) {
+      Utilities.catchError(error);
     }
-    return modalidad;
   }
 
   async findAll(): Promise<Modalidad[]> {
-    return await this.modalidadRepository.find();
+    try{
+      return await this.modalidadRepository.find();
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   async update(id: number, updateEtniaDTO: Partial<Modalidad>): Promise<Modalidad> {
-    const modalidad = await this.modalidadRepository.preload({
-      id,
-      ...updateEtniaDTO,
-    });
-    if (!modalidad) {
-      throw new NotFoundException(`modalidad con ID ${id} no encontrado`);
+    try{
+
+      const modalidad = await this.modalidadRepository.preload({
+        id,
+        ...updateEtniaDTO,
+      });
+      return await this.modalidadRepository.save(modalidad);
+    } catch (error) {
+      Utilities.catchError(error);
     }
-    return await this.modalidadRepository.save(modalidad);
   }
 
   async delete(id: number): Promise<void> {
-    const result = await this.modalidadRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`modalidad con ID ${id} no encontrado`);
+    try{
+      const result = await this.modalidadRepository.delete(id);
+    } catch (error) {
+      Utilities.catchError(error);
     }
   }
 }

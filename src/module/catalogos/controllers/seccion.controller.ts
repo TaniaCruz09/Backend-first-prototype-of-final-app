@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe } 
 import { CreateSeccionDTO } from '../dtos/seccion.dto';
 import { SeccionService } from '../services/seccion.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Utilities } from '../../../common/helpers/utilities';
 
 @ApiTags('Seccion')
 @ApiBearerAuth()
@@ -11,32 +12,44 @@ export class SeccionController {
 
   @Get('/')
   async findAll() {
-    const seccion = await this.seccionService.findAll();
-    const data = {
-      data: seccion,
-      message: 'ok',
-    };
-    return data;
+    try{
+      const seccion = await this.seccionService.findAll();
+      const data = {
+        data: seccion,
+        message: 'ok',
+      };
+      return data;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const seccion = await this.seccionService.findOne(id);
-    const data = {
-      data: seccion,
-      message: 'ok',
-    };
-    return data;
+    try{
+      const seccion = await this.seccionService.findOne(id);
+      const data = {
+        data: seccion,
+        message: 'ok',
+      };
+      return data;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   @Post('/')
   async create(@Body() payload: CreateSeccionDTO){
-    const seccion = await this.seccionService.create(payload);
-    const data = {
-      data: seccion,
-      message: 'ok',
-    };
-    return data;
+    try{
+      const seccion = await this.seccionService.create(payload);
+      const data = {
+        data: seccion,
+        message: 'ok',
+      };
+      return data;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   @Put('/:id')
@@ -44,21 +57,29 @@ export class SeccionController {
     @Param('id', ParseIntPipe) id: number, 
     @Body() payload: CreateSeccionDTO,
   ){
-    const seccion = await this.seccionService.update(id, payload);
-    const data = {
-      data: seccion,
-      message: 'ok',
-    };
-    return data;
+    try{
+      const seccion = await this.seccionService.update(id, payload);
+      const data = {
+        data: seccion,
+        message: 'ok',
+      };
+      return data;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   @Delete('/:id')
   async delete(@Param('id', ParseIntPipe) id: number) {
-    const seccion = await this.seccionService.delete(id);
-    const data = {
-      data: seccion,
-      message: 'ok',
-    };
-    return data;
+    try{
+      const seccion = await this.seccionService.delete(id);
+      const data = {
+        data: seccion,
+        message: 'ok',
+      };
+      return data;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 }

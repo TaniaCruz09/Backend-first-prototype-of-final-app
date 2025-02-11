@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe } 
 import { TurnoService } from '../services/turnos.service';
 import { createTurnoDto } from '../dtos/turnos.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Utilities } from '../../../common/helpers/utilities';
 
 @ApiTags('Turno')
 @ApiBearerAuth()
@@ -11,32 +12,44 @@ export class TurnoController {
 
   @Get('/')
   async findAll() {
-    const turno = await this.turnoService.findAll();
-    const data = {
-      data: turno,
-      message: 'ok',
-    };
-    return data;
+    try{
+      const turno = await this.turnoService.findAll();
+      const data = {
+        data: turno,
+        message: 'ok',
+      };
+      return data;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const turno = await this.turnoService.findOne(id);
-    const data = {
-      data: turno,
-      message: 'ok',
-    };
-    return data;
+    try{
+      const turno = await this.turnoService.findOne(id);
+      const data = {
+        data: turno,
+        message: 'ok',
+      };
+      return data;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   @Post('/')
   async create(@Body() payload: createTurnoDto){
-    const turno = await this.turnoService.create(payload);
-    const data = {
-      data: turno,
-      message: 'ok',
-    };
-    return data;
+    try{
+      const turno = await this.turnoService.create(payload);
+      const data = {
+        data: turno,
+        message: 'ok',
+      };
+      return data;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   @Put('/:id')
@@ -44,21 +57,29 @@ export class TurnoController {
     @Param('id', ParseIntPipe) id: number, 
     @Body() payload: createTurnoDto,
   ){
-    const turno = await this.turnoService.update(id, payload);
-    const data = {
-      data: turno,
-      message: 'ok',
-    };
-    return data;
+    try{
+      const turno = await this.turnoService.update(id, payload);
+      const data = {
+        data: turno,
+        message: 'ok',
+      };
+      return data;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 
   @Delete('/:id')
   async delete(@Param('id', ParseIntPipe) id: number) {
-    const turno = await this.turnoService.delete(id);
-    const data = {
-      data: turno,
-      message: 'ok',
-    };
-    return data;
+    try{
+      const turno = await this.turnoService.delete(id);
+      const data = {
+        data: turno,
+        message: 'ok',
+      };
+      return data;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
   }
 }

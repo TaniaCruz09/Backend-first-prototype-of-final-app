@@ -10,6 +10,7 @@ import {
 import { ProfessionsService } from "../services/professions.service";
 import { ProfessionsDto } from "../dtos/professions.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Utilities } from "../../../common/helpers/utilities";
     
 @ApiTags('Profession')
 @ApiBearerAuth()
@@ -20,12 +21,16 @@ export class ProfessionsController{
 
     @Post('/')
     async createdProfessions(@Body() payload: ProfessionsDto) {
-      const newProfessions = await this.professionsService.created(payload);
-      const data = {
-        data: newProfessions,
-        message: 'created',
-      };
-      return data;
+      try{
+        const newProfessions = await this.professionsService.created(payload);
+        const data = {
+          data: newProfessions,
+          message: 'created',
+        };
+        return data;
+      }catch(error){
+        Utilities.catchError(error)
+      }
     }
    
     @Get('/')

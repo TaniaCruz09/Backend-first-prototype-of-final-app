@@ -19,7 +19,6 @@ export class CreateSeccionDTO {
 //   updated_at: Date;
 
 //   @IsOptional()
-//   @IsDate()
 //   user_id: number;
 
 //   @IsOptional()

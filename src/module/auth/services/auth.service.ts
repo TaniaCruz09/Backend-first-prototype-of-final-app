@@ -18,46 +18,34 @@ import { UserService } from './users.service';
     ) {}
     async signIn(payload: AuthDto) {
       try {
-        //TODO: Buscar el usuario por el email
-        const { password, ...user } = await this.usersServices.findByEmail(
-          payload.email,
-        );
-
-        const bcrypt = require('bcrypt');
-        const passwordIngresada = '12345678';
-        const passwordGuardada = '12345678>';
-
-        bcrypt.compare(passwordIngresada, passwordGuardada).then(console.log);
-
-        console.log('Contraseña ingresada:', payload.password);
-        console.log('Contraseña almacenada en BD:', password);
-
+          const { email, password } = payload;
+          console.log('Email recibido:', email);
+          console.log('Contraseña ingresada:', password);
   
-        //TODO: Comparar el password
-        const isMatch: boolean = await bcrypt.compare(payload.password, password);
-        console.log('Resultado bcrypt.compare:', isMatch);
-        if (!isMatch) {
-          throw new UnauthorizedException('Credenciales inválidas');
-        }
+          const user = await this.usersServices.findByEmail(email);
+          if (!user) {
+              throw new UnauthorizedException('Usuario no encontrado');
+          }
   
-        //TODO: Generar el token
-        // Creando el payload del JWT para el usuario
-        const payloadJwt = {
-          sub: user.id,
-          name: user.name,
-        };
+          console.log('Contraseña almacenada en BD:', user.password);
   
-        // Generando el token con el payload
-        const token = await this.jwtService.signAsync(payloadJwt);
+          // Comparar contraseñas
+          const isMatch = await bcrypt.compare(password, user.password);
+          console.log('Resultado bcrypt.compare:', isMatch);
   
-        return {
-          user,
-          isMatch,
-          token,
-        };
+          if (!isMatch) {
+              throw new UnauthorizedException('Credenciales inválidas');
+          }
+  
+          // Generar el token
+          const payloadJwt = { sub: user.id, name: user.name };
+          const token = await this.jwtService.signAsync(payloadJwt);
+  
+          return { user, token };
       } catch (error) {
-        throw new InternalServerErrorException(error);
+          throw new InternalServerErrorException(error);
       }
-    }
+  }
+  
   }
   

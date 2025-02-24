@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { UserPartialTypeDto, UsersDto } from "../dtos/users-dto";
 import { SetupEnum } from "../enums";
 import * as bcrypt from 'bcrypt';
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class UserService {
@@ -14,6 +15,7 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly jwtService: JwtService,  // <-- INYECTAR JwtService
      ) {}
 
      countItems(){
@@ -38,17 +40,36 @@ export class UserService {
      }
 
      async created(payload: UsersDto) {
-        try {
-          let { password } = payload;
-    
-          password = await bcrypt.hash(password, SetupEnum.SALTORROUND);
-    
-          const newUser = this.userRepository.create({ ...payload, password });
-          return await this.userRepository.save(newUser);
-        } catch (error) {
+      try {
+          let { password, email, name } = payload;
+  
+          console.log('Contraseña ingresada antes de hash:', password);
+  
+          // Hashear la contraseña antes de guardar
+          password = await bcrypt.hash(password, 10);
+  
+          console.log('Contraseña hasheada antes de guardar:', password);
+  
+          // Crear usuario
+          const newUser = this.userRepository.create({ name, email, password });
+          const savedUser = await this.userRepository.save(newUser);
+  
+          // Generar el token
+          const token = await this.jwtService.signAsync({
+              sub: savedUser.id,
+              name: savedUser.name,
+              email: savedUser.email,
+          });
+  
+          // Guardar el token en la BD
+          savedUser.token = token;
+          await this.userRepository.save(savedUser);
+  
+          return { user: savedUser, token };
+      } catch (error) {
           throw new InternalServerErrorException(error);
-        }
       }
+  }
     
       async getUsers() {
         const users = await this.userRepository.find();

@@ -1,4 +1,5 @@
-import { IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
+import { IsDate, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
+import { CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 
 export class ProfessionsDto{
@@ -9,10 +10,19 @@ export class ProfessionsDto{
     @IsString()
     @MaxLength(100)
     readonly profession: string
+    //ESTOY TRABAJANDO EN ESTO
 
-    /*created_at: Date
+    @IsOptional()
+    @IsDate()
+    created_at: Date
+
+    
+    @IsOptional()
+    @IsDate()
     update_at: Date
-    user_id: number
-    user_update_id: number*/
+
+    @IsOptional()
+    @IsNumber()
+    user_update_id: number
 
 }

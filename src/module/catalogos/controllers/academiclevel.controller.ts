@@ -22,7 +22,7 @@ export class AcademicLevelController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     @Get('/academiclevel')
@@ -36,7 +36,7 @@ export class AcademicLevelController{
             return data;
         } catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     
@@ -51,7 +51,7 @@ export class AcademicLevelController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }   
+        }   
     }
 
     @Put('/academiclevel/:id')
@@ -68,7 +68,7 @@ export class AcademicLevelController{
             return data;
         } catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     @Delete('/academiclevel/:id')
@@ -82,6 +82,6 @@ export class AcademicLevelController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 }

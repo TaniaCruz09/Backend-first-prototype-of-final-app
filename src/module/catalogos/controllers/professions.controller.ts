@@ -78,7 +78,7 @@ export class ProfessionsController {
     try {
       const userId = req.user.id;  // <-- Obtener el ID del usuario que modifica
 
-      const profession = await this.professionsService.updateProfession(id, payload, userId);
+      const profession = await this.professionsService.updateProfession(id, payload);
 
       return { data: profession };
     } catch (error) {

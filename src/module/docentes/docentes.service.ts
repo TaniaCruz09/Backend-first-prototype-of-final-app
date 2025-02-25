@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Docentes } from "./docentes.entity";
 import { Repository } from "typeorm";
 import { DocentesDTO } from "./docentes.dto";
+import { Utilities } from "../../common/helpers/utilities";
 
 @Injectable()
 export class DocentesService {
@@ -12,44 +13,50 @@ export class DocentesService {
   ){}
 
   async createDocente(createDocenteDto: DocentesDTO): Promise<Docentes> {
-    const nuevoDocente = this.docenteRepository.create(createDocenteDto);
-    return this.docenteRepository.save(nuevoDocente);
-  }
-
-  async getDocente(): Promise<Docentes[]> {
-    return await this.docenteRepository.find({ 
-      relations: ['sexo', 'nivel_academico', 'profesion', 'pais', 'departamento', 'municipio'] 
-    });
-  }
-
-  async getDocenteById(id: number): Promise<Docentes> {
-    const docente = await this.docenteRepository.findOne({
-      where: { id },
-      relations: ['sexo', 'nivel_academico', 'profesion', 'pais', 'departamento', 'municipio']
-    });
-
-    if (!docente) {
-      throw new NotFoundException(`Docente con ID ${id} no encontrado`);
+    try {
+      const nuevoDocente = this.docenteRepository.create(createDocenteDto);
+      return this.docenteRepository.save(nuevoDocente);
+    } catch (error) {
+      Utilities.catchError(error)
     }
+  }
 
-    return docente;
+  async getDocente(): Promise<Docentes[]> { 
+    try {
+      return await this.docenteRepository.find({ 
+        relations: ['sexo', 'nivel_academico', 'profesion', 'pais', 'departamento', 'municipio'] 
+      });
+    } catch (error) {
+      Utilities.catchError(error)
+    }
+  }
+
+  async getDocenteById(id: number): Promise<Docentes> { 
+    try {
+      const docente = await this.docenteRepository.findOne({
+        where: { id },
+        relations: ['sexo', 'nivel_academico', 'profesion', 'pais', 'departamento', 'municipio']
+      });
+      return docente;
+    } catch (error) {
+      Utilities.catchError(error)
+    }
   }
 
   async deleteDocente(id: number): Promise<void> {
-    const result = await this.docenteRepository.delete(id);
-
-    if (result.affected === 0) {
-      throw new NotFoundException(`Docente con ID ${id} no encontrado`);
+    try {
+      const result = await this.docenteRepository.delete(id);
+    } catch (error) {
+      Utilities.catchError(error)
     }
   }
 
   async editDocente(id: number, payload: DocentesDTO): Promise<Docentes> {
-    const docente = await this.docenteRepository.preload({ id, ...payload });
-
-    if (!docente) {
-      throw new NotFoundException(`Docente con ID ${id} no encontrado`);
+    try {
+      const docente = await this.docenteRepository.preload({ id, ...payload });
+      return await this.docenteRepository.save(docente);
+    } catch (error) {
+      Utilities.catchError(error) 
     }
-
-    return await this.docenteRepository.save(docente);
-  }
+    }
 }

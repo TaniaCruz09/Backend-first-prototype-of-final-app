@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Put } 
 import { CalificacionesService } from './calificaciones.service';
 import { CreateCalificacionDto } from './dto/create-calificacione.dto';
 import { UpdateCalificacioneDto } from './dto/update-calificacione.dto';
+import { Utilities } from '../../common/helpers/utilities';
 
 @Controller('calificaciones')
 export class CalificacionesController {
@@ -9,51 +10,71 @@ export class CalificacionesController {
 
   @Post()
     async createCalificaciones(@Body() payload: CreateCalificacionDto) {
-      const nuevaCalificacion = await this.calificacionesService.create(payload)
-      const data = {
-        data: nuevaCalificacion,
-        message: 'creado correctamente',
-    }
-    return data;
+      try {
+        const nuevaCalificacion = await this.calificacionesService.create(payload)
+        const data = {
+          data: nuevaCalificacion,
+          message: 'Calificación creada correctamente',
+      }
+      return data;
+      } catch (error) {
+        Utilities.catchError(error)
+      }
     }
 
   @Get()
     async findAllCalificaciones() {
-      const calificaciones = await this.calificacionesService.findAll();
-      const data = {
-        data: calificaciones,
-        message: 'todo bien'
+      try {
+        const calificaciones = await this.calificacionesService.findAll();
+        const data = {
+          data: calificaciones,
+          message: 'ok'
+        }
+        return data;
+      } catch (error) {
+        Utilities.catchError(error)
       }
-      return data;
     }
 
   @Get(':id')
     async findOneByIdCalificaciones(@Param('id', ParseIntPipe) id: number) {
-      const calificaciones = await this.calificacionesService.findOne(id);
-      const data = {
-        data: calificaciones,
-        message: 'todo bien'
+      try {
+        const calificaciones = await this.calificacionesService.findOne(id);
+        const data = {
+          data: calificaciones,
+          message: 'ok'
+        }
+        return data;
+      } catch (error) {
+        Utilities.catchError(error)
       }
-      return data;
     }
 
   @Put(':id')
     async update(@Param('id') id: number, @Body() payload: UpdateCalificacioneDto) {
-      const calificiones = await this.calificacionesService.update(id, payload);
-      const data = {
-        data: calificiones,
-        message: 'Calificacione actualizada correctamente'
+      try {
+        const calificiones = await this.calificacionesService.update(id, payload);
+        const data = {
+          data: calificiones,
+          message: 'Calificación actualizada correctamente'
+        }
+        return data;
+      } catch (error) {
+        Utilities.catchError(error)
       }
-      return data;
     }
 
   @Delete(':id')
     async remove(@Param('id', ParseIntPipe) id: number) {
-      const calificaciones = await this.calificacionesService.remove(id)
-      const data = {
-        data: calificaciones,
-        message: "Calificacion agregada correctamente"
+      try {
+        const calificaciones = await this.calificacionesService.remove(id)
+        const data = {
+          data: calificaciones,
+          message: "Calificación eliminada correctamente"
+        }
+        return data;
+      } catch (error) {
+        Utilities.catchError(error)
       }
-      return data;
     }
 }

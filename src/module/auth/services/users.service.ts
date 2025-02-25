@@ -46,7 +46,7 @@ export class UserService {
           console.log('Contraseña ingresada antes de hash:', password);
   
           // Hashear la contraseña antes de guardar
-          password = await bcrypt.hash(password, 10);
+          password = await bcrypt.hash(password, SetupEnum.SALTORROUND);
   
           console.log('Contraseña hasheada antes de guardar:', password);
   

@@ -23,15 +23,23 @@ export class User {
     @ManyToOne(()=> ProfessionsEntity, (user)=> user.user)
     user: ProfessionsEntity //ESTOY TRABAJANDO EN ESTO
 
-    @ManyToMany(()=> Role, (role) => role.users)
-    @JoinTable({})
-    roles: Role[];
-
+    @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable({
+    name: 'user_has_roles',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+      foreignKeyConstraintName: 'fk_user_id',
+    },
+    inverseJoinColumn: {
+      name: 'role_id',
+      referencedColumnName: 'id',
+      foreignKeyConstraintName: 'fk_role_id',
+    },
+  })
+  roles: Role[];
     @Column({name: 'is_active', type: 'boolean', nullable: false, default: true})
     isActive: boolean;
 
-    @BeforeInsert()
-  async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
+  
 }

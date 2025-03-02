@@ -23,7 +23,7 @@ export class GenderController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     @Get('/')
@@ -37,7 +37,7 @@ export class GenderController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     @Get('/:id')
@@ -51,7 +51,7 @@ export class GenderController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     @Put('/:id')
@@ -67,7 +67,7 @@ export class GenderController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     @Delete('/:id')
@@ -81,6 +81,6 @@ export class GenderController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 }

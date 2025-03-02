@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { StudentEntity } from "./students.entity";
 import { StudentsDto } from "./student.dto";
+import { Utilities } from "../../common/helpers/utilities";
 
 
 @Injectable()
@@ -12,37 +13,54 @@ export class StudentService{
         private readonly StudentRepo: Repository<StudentEntity>,
     ){}
 
-    async created(payload: StudentsDto):Promise<StudentEntity>{
-        const student = await this.StudentRepo.create(payload);
-        return await this.StudentRepo.save(student);
+    async created(payload: StudentsDto):Promise<StudentEntity>{ 
+        try {
+            const student = await this.StudentRepo.create(payload);
+            return await this.StudentRepo.save(student);
+        } catch (error) {
+            Utilities.catchError(error)
+        }
 
     }
     async getStudent():Promise<StudentEntity[]>{
-        return await this.StudentRepo.find({
-            relations: ['pais','gender','departamento','municipio']    
-        });
+        try {
+            return await this.StudentRepo.find({
+                relations: ['pais','gender','departamento','municipio']    
+            });
+        } catch (error) {
+            Utilities.catchError(error)
+        }
     }
 
     async getStudentById(id: number): Promise <StudentEntity> {
-        const student = await this.StudentRepo.findOne({
-            where: {id},
-            relations: ['pais','gender','departamento','municipio']  
-        });
-        if (!student) {
-            throw new NotFoundException(`Estudiante con ID ${id} no encontrado`);
-          }
-        return student;
+        try {
+            const student = await this.StudentRepo.findOne({
+                where: {id},
+                relations: ['pais','gender','departamento','municipio']  
+            });
+            return student;
+        } catch (error) {
+            Utilities.catchError(error)
+        }
     }
 
     async updateStudent(id:number, payload: StudentsDto): Promise <StudentEntity> {
-        const student = await this.StudentRepo.preload({id, ...payload});
-        return await this.StudentRepo.save(student)
+        try {
+            const student = await this.StudentRepo.preload({id, ...payload});
+            return await this.StudentRepo.save(student)
+        } catch (error) {
+            Utilities.catchError(error)
+        }
     }
 
     async deleteStudent(id: number): Promise<StudentEntity> {
-        const student = await this.StudentRepo.findOne({
-            where: {id: id}
-        })
-        return await this.StudentRepo.remove(student);
+        try {
+            const student = await this.StudentRepo.findOne({
+                where: {id: id}
+            })
+            return await this.StudentRepo.remove(student);
+        } catch (error) {
+            Utilities.catchError(error)
+        }
     }
 }

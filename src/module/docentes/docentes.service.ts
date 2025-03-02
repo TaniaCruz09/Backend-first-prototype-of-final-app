@@ -13,7 +13,7 @@ export class DocentesService {
 
   async createDocente(createDocenteDto: DocentesDTO): Promise<Docentes> {
     const nuevoDocente = this.docenteRepository.create(createDocenteDto);
-    return this.docenteRepository.save(nuevoDocente);
+    return await this.docenteRepository.save(nuevoDocente);
   }
 
   async getDocente(): Promise<Docentes[]> {

@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { AcademicLevelEntity, Departamento, GenderEntity, Municipio, Pais, ProfessionsEntity } from "../catalogos";
+import { Grupos } from "../grupos/grupos.entity";
 
 @Entity({name: 'docentes'})
 export class Docentes {
@@ -120,4 +121,7 @@ export class Docentes {
         length: 12
     })
     telefono_contacto_emergencia: string;
+
+    @OneToMany(()=> Grupos, (grupo) => grupo.docente)
+    grupos?: Grupos[];
 }

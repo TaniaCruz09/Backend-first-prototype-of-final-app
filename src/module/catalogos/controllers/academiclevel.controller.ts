@@ -5,13 +5,13 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Utilities } from "src/common/helpers/utilities";
 
 
-@ApiTags('catalogo/academiclevel')
+@ApiTags('academiclevel')
 @ApiBearerAuth()
-@Controller('catalogo')
+@Controller('academiclevel')
 export class AcademicLevelController{
     constructor (private readonly academicLevelService: AcademicLevelService){}
 
-    @Post ('/academiclevel')
+    @Post ('/')
     async createAcademicLevel(@Body() payload: AcademicLevelDto){
         try {
             const newAcademicLevel = await this.academicLevelService.created(payload);
@@ -25,7 +25,7 @@ export class AcademicLevelController{
           }
     }
 
-    @Get('/academiclevel')
+    @Get('/')
     async getAcademicLevel(){ 
         try {
             const academicLevel = await this.academicLevelService.getAcademicLevel();
@@ -40,7 +40,7 @@ export class AcademicLevelController{
     }
 
     
-    @Get('/academiclevel/:id')
+    @Get('/:id')
     async getAcademicLevelById(@Param('id', ParseIntPipe) id: number){
         try {
             const academicLevel = await this.academicLevelService.getAcademicLevelById(id);
@@ -54,7 +54,7 @@ export class AcademicLevelController{
           }   
     }
 
-    @Put('/academiclevel/:id')
+    @Put('/:id')
     async updateAcademicLevel(
         @Param('id', ParseIntPipe) id: number,
         @Body() payload: AcademicLevelDto,
@@ -71,7 +71,7 @@ export class AcademicLevelController{
           }
     }
 
-    @Delete('/academiclevel/:id')
+    @Delete('/:id')
     async deleteAcademicLevel(@Param('id', ParseIntPipe) id: number) {
         try {
             const academicLevel = await this.academicLevelService.deleteAcademicLevel(id);

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Grupos } from "src/module/grupos/grupos.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({schema: 'catalogos', name: 'turno'})
 export class Turno {
@@ -15,6 +16,9 @@ export class Turno {
         length: 50,
     })
     turno: string;
+
+    @OneToMany(()=> Grupos, (grupos) => grupos.turno)
+    grupos?: Grupos[]
 
     // @Column()
     // create_at: Date;

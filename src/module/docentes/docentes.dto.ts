@@ -9,74 +9,74 @@ export class DocentesDTO {
     @IsNotEmpty()
     @IsString()
     @MaxLength(100)
-    readonly nombres: string;
+    nombres: string;
 
     @IsNotEmpty()
     @IsString()
     @MaxLength(50)
-    readonly apellido_paterno: string;
+    apellido_paterno: string;
 
     @IsNotEmpty()
     @IsString()
     @MaxLength(50)
-    readonly apellido_materno: string;
+    apellido_materno: string;
 
     @IsNotEmpty()
     @IsString()
     @MaxLength(16)
-    readonly cedula_identidad: string;
+    cedula_identidad: string;
 
     @IsNotEmpty()
     @IsObject()
-    readonly sexo: GenderEntity;
+    sexo: GenderEntity;
 
     @IsNotEmpty()
     @IsArray()
-    readonly nivel_academico: AcademicLevelEntity[];
+    nivel_academico: AcademicLevelEntity[];
 
     @IsNotEmpty()
     @IsArray()
-    readonly profesion: ProfessionsEntity[];
+    profesion: ProfessionsEntity[];
 
     @IsNotEmpty()
     @IsString()
     @MaxLength(12)
-    readonly telefono: string;
+    telefono: string;
 
     @IsNotEmpty()
     @IsDate()
-    readonly fecha_nacimiento: Date;
+    fecha_nacimiento: Date;
 
     @IsNotEmpty()
     @IsObject()
-    readonly pais: Pais;
+    pais: Pais;
 
     @IsNotEmpty()
     @IsObject()
-    readonly departamento: Departamento;
+    departamento: Departamento;
 
     @IsNotEmpty()
     @IsObject()
-    readonly municipio: Municipio;
+    municipio: Municipio;
 
     @IsNotEmpty()
     @IsString()
     @MaxLength(20)
-    readonly direccion_domiciliar: string;
+    direccion_domiciliar: string;
 
     @IsNotEmpty()
     @IsDate()
-    readonly fechaContratado: Date;
+    fechaContratado: Date;
 
     @IsNotEmpty()
     @IsString()
     @MaxLength(150)
-    readonly nombre_contacto_emergencia: string;
+    nombre_contacto_emergencia: string;
 
     @IsNotEmpty()
     @IsString()
     @MaxLength(12)
-    readonly telefono_contacto_emergencia: string;
+    telefono_contacto_emergencia: string;
 
 
 } 

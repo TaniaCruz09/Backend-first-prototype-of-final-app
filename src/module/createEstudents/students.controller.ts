@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
 import { StudentsDto } from "./student.dto";
 import { StudentService } from "./students.service";
+import { Utilities } from "../../common/helpers/utilities";
 
 
 
@@ -10,54 +11,74 @@ export class StudentController{
 
     @Post ('/')
     async createStudent(@Body() payload: StudentsDto){
-        const newStudent = await this.studentService.created(payload);
-        const data = {
-            data: newStudent,
-            message: 'created',
+        try {
+            const newStudent = await this.studentService.created(payload);
+            const data = {
+                data: newStudent,
+                message: 'Estudiante agregado correctamente',
+            }
+            return data;
+        } catch (error) {
+            Utilities.catchError(error)
         }
-        return data;
     }
 
     @Get('/')
     async getStudent(){ 
-    const student = await this.studentService.getStudent();
-    const data = {
-        data : student,
-        message: 'ok',
-    };
-    return data;
+        try {
+            const student = await this.studentService.getStudent();
+            const data = {
+                data : student,
+                message: 'ok',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError(error)
+        }
     }
 
     @Get('/:id')
     async getStudentById(@Param('id', ParseIntPipe) id: number){
-        const student = await this.studentService.getStudentById(id);
-
-        const data = {
-            data:student,
-            message: 'all ok',
-        };
-        return data;
+        try {
+            const student = await this.studentService.getStudentById(id);
+            const data = {
+                data:student,
+                message: 'ok',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError(error)
+        }
     }
 
     @Put('/:id')
-    async updateStudent(
+    async updateStudent( 
         @Param('id', ParseIntPipe) id: number,
         @Body() payload: StudentsDto,
-    ){
-        const student= await this.studentService.updateStudent(id, payload);
-        const data = {
-            data: student,
+    ){ 
+        try {
+            const student= await this.studentService.updateStudent(id, payload);
+            const data = {
+                data: student,
+                message: 'Estudiante actualizado correctamente',
+            }
+            return data;
+        } catch (error) {
+            Utilities.catchError(error)
         }
-        return data;
     }
 
     @Delete('/:id')
-    async deleteStudent(@Param('id',ParseIntPipe) id:number ) {
-        const student = await this.studentService.deleteStudent(id);
-        const data = {
-            data: student,
-            message: 'student deleted',
-        };
-        return data;
+    async deleteStudent(@Param('id',ParseIntPipe) id:number ) { 
+        try {
+            const student = await this.studentService.deleteStudent(id);
+            const data = {
+                data: student,
+                message: 'Estudiante eliminado correctamente',
+            };
+            return data;
+        } catch (error) {
+            Utilities.catchError(error)
+        }
     }
 }

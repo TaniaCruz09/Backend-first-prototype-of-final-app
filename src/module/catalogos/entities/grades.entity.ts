@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Grupos } from "../../../module/grupos/grupos.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity({schema: 'catalogos', name: 'grades'})
@@ -15,4 +16,7 @@ export class GradesEntity{
         length:100
     })
     grades:string
+
+    @OneToMany(() => Grupos, (grupo) => grupo.grado)
+    grupos?: Grupos[];
 }

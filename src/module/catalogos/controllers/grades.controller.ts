@@ -22,7 +22,7 @@ export class GradesController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     @Get('/')
@@ -36,7 +36,7 @@ export class GradesController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     @Get('/:id')
@@ -51,7 +51,7 @@ export class GradesController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     @Put('/:id')
@@ -67,7 +67,7 @@ export class GradesController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 
     @Delete('/:id')
@@ -81,6 +81,6 @@ export class GradesController{
             return data;
         }catch(error){
             Utilities.catchError(error)
-          }
+        }
     }
 }

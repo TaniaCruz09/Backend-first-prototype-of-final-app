@@ -25,8 +25,19 @@ export class ProfessionsController {
   constructor(private readonly professionsService: ProfessionsService) { }
 
   @Post('/')
-  async createdProfessions(@Body() payload: ProfessionsDto) {
+  async createdProfessions(@Body() payload: ProfessionsDto, @Req() req ) {
     try {
+      const userId = req.user?.id; // Obtener el ID del usuario autenticado
+                    
+      if (!userId) {
+          return {
+              message: "Usuario no autenticado",
+              statusCode: 401
+          };
+      }
+
+      // Agregar el user_update_id al payload
+      payload.user_update_id = userId;
       const newProfessions = await this.professionsService.created(payload);
       const data = {
         data: newProfessions,

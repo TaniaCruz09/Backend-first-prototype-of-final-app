@@ -23,6 +23,7 @@ export class ProfessionsDto{
 
     @IsOptional()
     @IsNumber()
-    user_update_id: number
+    user_update_id: number;
+    
 
 }

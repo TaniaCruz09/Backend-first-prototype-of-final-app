@@ -8,14 +8,17 @@ import {
   Post,
   Put,
   Req,
+  UseGuards,
 } from "@nestjs/common";
 import { ProfessionsService } from "../services/professions.service";
 import { ProfessionsDto } from "../dtos/professions.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Utilities } from "../../../common/helpers/utilities";
+import { JwtAuthGuard } from "src/module/auth/guards/jwt.guard";
 
 @ApiTags('Profession')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard) 
 @Controller('profession')
 
 export class ProfessionsController {
@@ -69,22 +72,51 @@ export class ProfessionsController {
     }
   }
 
-  @Put('/:id')
-  async updateProfession(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() payload: ProfessionsDto,
-    @Req() req,  // <-- Capturar el usuario autenticado
-  ) {
-    try {
-      const userId = req.user.id;  // <-- Obtener el ID del usuario que modifica
-
-      const profession = await this.professionsService.updateProfession(id, payload, userId);
-
-      return { data: profession };
-    } catch (error) {
-      Utilities.catchError(error);
-    }
-  }
+    /* @Put('/:id')
+        async update(
+            @Param('id', ParseIntPipe) id: number, 
+            @Body() payload: ProfessionsDto,
+        ){
+            try {
+                const profesion = await this.professionsService.updateProfession(id, payload);
+                const data = {
+                data: profesion,
+                message: 'profesion actualizado correctamente',
+                };
+                return data;
+            } catch (error) {
+                Utilities.catchError (error)
+            }
+        }*/
+            @Put('/:id')
+            async update(
+                @Param('id', ParseIntPipe) id: number, 
+                @Body() payload: ProfessionsDto,
+                @Req() req // Capturar el usuario autenticado
+            ) {
+                try {
+                    const userId = req.user?.id; // Obtener el ID del usuario autenticado
+                    
+                    if (!userId) {
+                        return {
+                            message: "Usuario no autenticado",
+                            statusCode: 401
+                        };
+                    }
+            
+                    // Agregar el user_update_id al payload
+                    payload.user_update_id = userId;
+            
+                    const profesion = await this.professionsService.updateProfession(id, payload);
+                    return {
+                        data: profesion,
+                        message: 'Profesión actualizada correctamente',
+                    };
+                } catch (error) {
+                    Utilities.catchError(error);
+                }
+            }
+            
 
 
   @Delete('/:id')

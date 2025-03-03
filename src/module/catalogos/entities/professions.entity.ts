@@ -20,7 +20,7 @@ export class ProfessionsEntity {
     @Column({ name: 'user_update_id', type: 'int4', nullable: true })
     user_update_id: number;
 
-    @ManyToOne(() => User, (user) => user.id, { nullable: true })
+    @ManyToOne(() => User, (user) => user.id)
     @JoinColumn({ name: 'user_update_id' })  // Se enlaza a la columna 'user_update_id'
     user: User;
 

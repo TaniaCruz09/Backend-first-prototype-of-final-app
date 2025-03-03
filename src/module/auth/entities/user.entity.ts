@@ -20,8 +20,8 @@ export class User {
       @Column({ name: 'token', type: 'varchar', length: 500, nullable: true })
       token: string;
 
-    @ManyToOne(()=> ProfessionsEntity, (user)=> user.user)
-    user: ProfessionsEntity //ESTOY TRABAJANDO EN ESTO
+    @ManyToOne(()=> ProfessionsEntity, (users)=> users.id)
+    users: ProfessionsEntity //ESTOY TRABAJANDO EN ESTO
 
     @ManyToMany(() => Role, (role) => role.users)
   @JoinTable({

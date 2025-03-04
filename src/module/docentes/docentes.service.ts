@@ -43,9 +43,10 @@ export class DocentesService {
     }
   }
 
-  async deleteDocente(id: number): Promise<void> {
+  async deleteDocente(id: number): Promise<Docentes> {
     try {
-      const result = await this.docenteRepository.delete(id);
+      const result = await this.docenteRepository.findOne({ where: { id } });
+      return await this.docenteRepository.remove(result);
     } catch (error) {
       Utilities.catchError(error)
     }

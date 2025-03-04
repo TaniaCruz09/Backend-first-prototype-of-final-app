@@ -6,6 +6,7 @@ import { UserPartialTypeDto, UsersDto } from "../dtos/users-dto";
 import { SetupEnum } from "../enums";
 import * as bcrypt from 'bcrypt';
 import { JwtService } from "@nestjs/jwt";
+import { Utilities } from "src/common/helpers/utilities";
 
 @Injectable()
 export class UserService {
@@ -43,12 +44,8 @@ export class UserService {
       try {
           let { password, email, name } = payload;
   
-          console.log('Contraseña ingresada antes de hash:', password);
-  
           // Hashear la contraseña antes de guardar
           password = await bcrypt.hash(password, SetupEnum.SALTORROUND);
-  
-          console.log('Contraseña hasheada antes de guardar:', password);
   
           // Crear usuario
           const newUser = this.userRepository.create({ name, email, password });
@@ -76,9 +73,13 @@ export class UserService {
         return users;
       }
     
-      async getUser(id: number) {
-        const user = await this.userRepository.findOne({ where: { id: id } });
-        return user;
+      async getUserById(id: number): Promise<User> {
+        try{
+          const user = await this.userRepository.findOne({ where: { id } });
+          return user;
+        } catch (error){
+          Utilities.catchError(error);
+        }
       }
     
       async updated(id: number, payload: UserPartialTypeDto) {
@@ -90,10 +91,15 @@ export class UserService {
         const merged = this.userRepository.merge(oldUser, payload);
         return await this.userRepository.save(merged);
       }
+
+      // deleted(id: number) {
+      //   const index = this.users.findIndex((user) => user.id === id);
+      //   this.users.splice(index, 1);
+      //   return 'Usuario eliminado con éxito';
+      // }
     
-      deleted(id: number) {
-        const index = this.users.findIndex((user) => user.id === id);
-        this.users.splice(index, 1);
-        return 'Usuario eliminado con éxito';
+      async deleted(id: number): Promise<User> {
+        const index = await this.userRepository.findOne({ where: { id } });
+        return await this.userRepository.remove(index)
       }
 }

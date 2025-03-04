@@ -19,19 +19,14 @@ import { UserService } from './users.service';
     async signIn(payload: AuthDto) {
       try {
           const { email, password } = payload;
-          console.log('Email recibido:', email);
-          console.log('Contraseña ingresada:', password);
   
           const user = await this.usersServices.findByEmail(email);
           if (!user) {
               throw new UnauthorizedException('Usuario no encontrado');
           }
-  
-          console.log('Contraseña almacenada en BD:', user.password);
-  
+
           // Comparar contraseñas
           const isMatch = await bcrypt.compare(password, user.password);
-          console.log('Resultado bcrypt.compare:', isMatch);
   
           if (!isMatch) {
               throw new UnauthorizedException('Credenciales inválidas');

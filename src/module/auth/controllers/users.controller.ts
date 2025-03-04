@@ -16,6 +16,7 @@ import { Auth, GetUser } from '../decorators';
 import { User } from '../entities';
 import { UserService } from '../services';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Utilities } from 'src/common/helpers/utilities';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -40,8 +41,12 @@ export class UsersController {
   }
 
   @Get('/:id')
-  async getUser(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
-    return await this.usersServices.getUser(id);
+  async getUserById(@Param('id', ParseIntPipe) id: number) {
+    try{
+      return await this.usersServices.getUserById(id);
+    } catch(error){
+      Utilities.catchError(error)
+    }
   }
 
   @Put('/:id')

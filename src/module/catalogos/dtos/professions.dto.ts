@@ -13,9 +13,12 @@ export class ProfessionsDto{
     //ESTOY TRABAJANDO EN ESTO
 
     @IsOptional()
+    @IsNumber()
+    user_create_id: number;
+
+    @IsOptional()
     @IsDate()
     created_at: Date
-
     
     @IsOptional()
     @IsDate()
@@ -24,6 +27,14 @@ export class ProfessionsDto{
     @IsOptional()
     @IsNumber()
     user_update_id: number;
+
+    @IsOptional()
+    @IsDate()
+    deleted_at: Date;
+
+    @IsOptional()
+    @IsNumber()
+    deleted_at_id: number;
     
 
 }

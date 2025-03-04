@@ -1,6 +1,6 @@
 import { User } from "src/module/auth/entities";
 import { Docentes } from "../../docentes/docentes.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import * as moment from "moment-timezone";
 
 
@@ -11,6 +11,9 @@ export class ProfessionsEntity {
 
     @Column({ name: 'profession', type: 'varchar', length: 100 })
     profession: string;
+
+    @Column({ name: 'user_create_id', type: 'int4' ,nullable: true })  // Nuevo campo
+    user_create_id: number;
 
     @CreateDateColumn({ name: 'created_at', type: "timestamp", 
         default: () => "CURRENT_TIMESTAMP",  // Guarda la fecha en UTC por defecto
@@ -32,9 +35,23 @@ export class ProfessionsEntity {
     @Column({ name: 'user_update_id', type: 'int4', nullable: true })
     user_update_id: number;
 
+    @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+    deleted_at: Date;
+
+    @Column({ name: 'deleted_at_id', type: 'int4', nullable: true })
+    deleted_at_id: number;
+
     @ManyToOne(() => User, (user) => user.id)
-    @JoinColumn({ name: 'user_update_id' })  // Se enlaza a la columna 'user_update_id'
-    user: User;
+    @JoinColumn({ name: 'user_create_id' })  // Se enlaza con el usuario que creó el registro
+    user_create: User;
+
+    @ManyToOne(() => User, (user) => user.id)
+    @JoinColumn({ name: 'user_update_id', })  // Se enlaza a la columna 'user_update_id'
+    user_update: User;
+
+    @ManyToOne(() => User, (user) => user.id)
+    @JoinColumn({ name: 'deleted_at_id' })  // Se enlaza con el usuario que eliminó el registro
+    user_delete: User;
 
     @ManyToMany(() => Docentes, (docente) => docente.profesion)
     docente: Docentes[];

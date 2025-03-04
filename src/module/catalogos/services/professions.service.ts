@@ -96,7 +96,7 @@ export class ProfessionsService{
     }
 
     
-      async deleteProfession (id:number): Promise<ProfessionsEntity> {
+     /* async deleteProfession (id:number): Promise<ProfessionsEntity> {
         try{
 
           const profession = await this.ProfessionsRepo.findOne({
@@ -107,6 +107,25 @@ export class ProfessionsService{
         }catch(error){
           Utilities.catchError(error)
         }
+      }*/
+
+        async deleteProfession(id: number, userId: number): Promise<ProfessionsEntity> {
+          try {
+              const profession = await this.ProfessionsRepo.findOne({ where: { id } });
+      
+              if (!profession) {
+                  throw new NotFoundException("Profesión no encontrada");
+              }
+      
+              // Registrar el usuario que eliminó y la fecha de eliminación
+              profession.deleted_at = new Date();
+              profession.deleted_at_id = userId;
+      
+              return await this.ProfessionsRepo.save(profession); // Guardar los cambios
+          } catch (error) {
+              Utilities.catchError(error);
+          }
       }
+      
 
 }

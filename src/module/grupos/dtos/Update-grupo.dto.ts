@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsObject, IsOptional } from "class-validator";
-import { GradesEntity, Modalidad, Seccion, Turno } from "../catalogos";
-import { Docentes } from "../docentes/docentes.entity";
+import { GradesEntity, Modalidad, Seccion, Turno } from "../../catalogos";
+import { Docentes } from "../../docentes/docentes.entity";
 
 export class UpdateGrupoDto {
      @IsOptional()

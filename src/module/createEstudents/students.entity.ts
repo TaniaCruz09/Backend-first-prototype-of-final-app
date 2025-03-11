@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Departamento, GenderEntity, Municipio, Pais } from "../catalogos";
+import { GruposConEstudiantes } from "../grupos/entities/gruposConEstudiantes.entity";
 
 
 @Entity({ name: 'student'})
@@ -101,4 +102,7 @@ export class StudentEntity{
         nullable: true
      })
     observations: string;
+
+    @OneToMany(()=> GruposConEstudiantes, (grupoConEstudiantes) => grupoConEstudiantes.estudiante)
+    grupoConEstudiantes?: GruposConEstudiantes;
 }

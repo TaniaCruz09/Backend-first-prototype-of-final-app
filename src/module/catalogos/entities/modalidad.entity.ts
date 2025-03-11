@@ -1,4 +1,4 @@
-import { Grupos } from "../../../module/grupos/grupos.entity";
+import { Grupos } from "../../../module/grupos/entities/grupos.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({schema: 'catalogos', name: 'modalidad'})

@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { GruposService } from './grupos.service';
-import { CreateGrupoDto } from './grupos.dto';
-import { Utilities } from '../../common/helpers/utilities';
-import { UpdateGrupoDto } from './Update-grupo.dto';
+import { GruposService } from '../services/grupos.service';
+import { UpdateGrupoDto } from '../dtos/Update-grupo.dto';
+import { CreateGrupoDto } from '../dtos/grupos.dto';
+import { Utilities } from '../../../common/helpers/utilities';
 
 @ApiTags('Grupos')
 @ApiBearerAuth()

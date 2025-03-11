@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { AcademicLevelEntity, Departamento, GenderEntity, Municipio, Pais, ProfessionsEntity } from "../catalogos";
-import { Grupos } from "../grupos/grupos.entity";
+import { Grupos } from "../grupos/entities/grupos.entity";
 
 @Entity({name: 'docentes'})
 export class Docentes {

@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { GradesEntity, Modalidad, Seccion, Turno } from "../catalogos";
-import { Docentes } from "../docentes/docentes.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { GradesEntity, Modalidad, Seccion, Turno } from "../../catalogos";
+import { Docentes } from "../../docentes/docentes.entity";
+import { GruposConEstudiantes } from "./gruposConEstudiantes.entity";
 
 @Entity({name: 'grupos'})
 export class Grupos {
@@ -27,5 +28,8 @@ export class Grupos {
 
     @ManyToOne(()=> Docentes, (docente) => docente.grupos)
     docente: Docentes;
+
+    @OneToMany(()=> GruposConEstudiantes, (grupoConEstudiantes)=> grupoConEstudiantes.grupo)
+    grupoConEstudiantes?: GruposConEstudiantes;
 
 }

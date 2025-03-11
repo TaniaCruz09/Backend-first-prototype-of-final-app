@@ -25,7 +25,6 @@ export class ProfessionsService{
       async getProfessions(){
         try{
           const profession = await this.ProfessionsRepo.find();
-          console.log(profession)
           return profession;
         }catch(error){
           Utilities.catchError(error)

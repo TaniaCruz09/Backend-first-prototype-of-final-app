@@ -11,6 +11,7 @@ import { CalificacionesModule } from './module/calificaciones/calificaciones.mod
 import { GruposModule } from './module/grupos/grupos.module';
 import { CentroModule } from './module/centroEducativo/centro.module';
 
+
 @Module({
   imports: [ConfigModule.forRoot({
     envFilePath: '.env',

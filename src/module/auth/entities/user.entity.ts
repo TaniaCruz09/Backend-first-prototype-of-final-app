@@ -1,7 +1,7 @@
 import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "./roles.entity";
 import * as bcrypt from 'bcrypt';
-import { ProfessionsEntity } from "src/module/catalogos";
+import { AcademicLevelEntity, ProfessionsEntity } from "src/module/catalogos";
 
 @Entity({name: "users"})
 export class User {
@@ -20,8 +20,11 @@ export class User {
       @Column({ name: 'token', type: 'varchar', length: 500, nullable: true })
       token: string;
 
-    @ManyToOne(()=> ProfessionsEntity, (users)=> users.id)
-    users: ProfessionsEntity //ESTOY TRABAJANDO EN ESTO
+    @ManyToOne(()=> ProfessionsEntity, (professions)=> professions.id)
+    professions: ProfessionsEntity //ESTOY TRABAJANDO EN ESTO
+
+    @ManyToOne(()=> AcademicLevelEntity,(academicLevel)=>academicLevel.id )
+    academicLevel: AcademicLevelEntity
 
     @ManyToMany(() => Role, (role) => role.users)
   @JoinTable({

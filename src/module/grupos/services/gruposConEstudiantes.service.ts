@@ -1,19 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Grupos } from './grupos.entity';
 import { Repository } from 'typeorm';
-import { CreateGrupoDto } from './grupos.dto';
-import { Utilities } from '../../common/helpers/utilities';
-import { UpdateGrupoDto } from './Update-grupo.dto';
+import { Utilities } from '../../../common/helpers/utilities';
+import { GruposConEstudiantes } from '../entities/gruposConEstudiantes.entity';
+import { CreateGrupoConEstudiantesDto } from '../dtos/gruposConEstudiantes.dto';
+import { UpdateGrupoConEstudiantesDto } from '../dtos/updateGruposConEstudiantes.dto';
 
 @Injectable()
-export class GruposService {
+export class GruposConEstudiantesService {
     constructor(
-        @InjectRepository(Grupos)
-        private grupoRepository: Repository<Grupos>
+        @InjectRepository(GruposConEstudiantes)
+        private grupoRepository: Repository<GruposConEstudiantes>
     ){}
 
-    async createGrupo(createGrupoDto: CreateGrupoDto): Promise<Grupos> {
+    async createGrupo(createGrupoDto: CreateGrupoConEstudiantesDto): Promise<GruposConEstudiantes> {
         try{
             const nuevoGrupo = this.grupoRepository.create(createGrupoDto);
             return await this.grupoRepository.save(nuevoGrupo)
@@ -22,10 +22,10 @@ export class GruposService {
         }
     }
 
-    async getGrupo(): Promise<Grupos[]>{
+    async getGrupo(): Promise<GruposConEstudiantes[]>{
         try{
             const grupo = await this.grupoRepository.find({
-                relations: ['grado', 'seccion', 'modalidad', ' turno', 'docente']
+                relations: ['grupo', 'estudiante']
             });
             return grupo;
         } catch(error){
@@ -33,11 +33,11 @@ export class GruposService {
         }
     }
 
-    async getGrupoById(id:number): Promise<Grupos>{
+    async getGrupoById(id:number): Promise<GruposConEstudiantes>{
         try{
             const grupo = await this.grupoRepository.findOne({
                 where: {id},
-                relations: ['grado', 'seccion', 'modalidad', ' turno', 'docente']
+                relations: ['grupo', 'estudiante']
             })
             return grupo;
         } catch(error){
@@ -45,7 +45,7 @@ export class GruposService {
         }
     }
 
-    async deleteGrupos(id:number): Promise<Grupos>{
+    async deleteGrupos(id:number): Promise<GruposConEstudiantes>{
         try {
             const grupos = await this.grupoRepository.findOne({
                 where: {id: id}
@@ -56,7 +56,7 @@ export class GruposService {
         }
     }
 
-    async updateGrupos(id: number, payload: UpdateGrupoDto): Promise<Grupos>{
+    async updateGrupos(id: number, payload: UpdateGrupoConEstudiantesDto): Promise<GruposConEstudiantes>{
         try{
             const grupos = await this.grupoRepository.preload({ id, ...payload });
             if (!grupos) throw new NotFoundException(`Grupos con ID ${id} no encontrado`);

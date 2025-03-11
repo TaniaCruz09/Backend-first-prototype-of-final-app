@@ -42,17 +42,33 @@ export class AcademicLevelService {
 
   async updateAcademicLevel(id: number, payload: AcademicLevelDto): Promise<AcademicLevelEntity> {
     try {
-      const academicLevel = await this.AcademicLevelRepo.preload({ id, ...payload });
+      const academicLevel = await this.AcademicLevelRepo.findOne({ where: { id } })
+      if (!academicLevel) {
+        throw new NotFoundException("Profesión no encontrada");
+    }
+    Object.assign(academicLevel, payload);
+    
+    // Asignar la fecha de actualización y el usuario que modifica
+    academicLevel.update_at = new Date();
+    academicLevel.user_update_id;
+
       return await this.AcademicLevelRepo.save(academicLevel);
     } catch(error){
       Utilities.catchError(error)
     }
   }
 
-  async deleteAcademicLevel(id: number): Promise<AcademicLevelEntity> {
+  async deleteAcademicLevel(id: number,userId: number): Promise<AcademicLevelEntity> {
     try {
       const academicLevel = await this.AcademicLevelRepo.findOne({ where: { id } });
-      return await this.AcademicLevelRepo.remove(academicLevel);
+      if (!academicLevel) {
+        throw new NotFoundException("Profesión no encontrada");
+    }
+
+    // Registrar el usuario que eliminó y la fecha de eliminación
+    academicLevel.deleted_at = new Date();
+    academicLevel.deleted_at_id = userId;
+      return await this.AcademicLevelRepo.save(academicLevel);
     } catch(error){
       Utilities.catchError(error)
     }

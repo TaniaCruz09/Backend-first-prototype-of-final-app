@@ -9,20 +9,19 @@ import {
   Put,
   Req,
   UseGuards,
-} from "@nestjs/common";
-import { ProfessionsService } from "../services/professions.service";
-import { ProfessionsDto } from "../dtos/professions.dto";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { Utilities } from "../../../common/helpers/utilities";
-import { JwtAuthGuard } from "src/module/auth/guards/jwt.guard";
+} from '@nestjs/common';
+import { ProfessionsService } from '../services/professions.service';
+import { ProfessionsDto } from '../dtos/professions.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Utilities } from '../../../common/helpers/utilities';
+import { JwtAuthGuard } from 'src/module/auth/guards/jwt.guard';
 
 @ApiTags('Profession')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('profession')
-
 export class ProfessionsController {
-  constructor(private readonly professionsService: ProfessionsService) { }
+  constructor(private readonly professionsService: ProfessionsService) {}
 
   @Post('/')
   async createdProfessions(@Body() payload: ProfessionsDto, @Req() req) {
@@ -31,8 +30,8 @@ export class ProfessionsController {
 
       if (!userId) {
         return {
-          message: "Usuario no autenticado",
-          statusCode: 401
+          message: 'Usuario no autenticado',
+          statusCode: 401,
         };
       }
 
@@ -46,14 +45,13 @@ export class ProfessionsController {
       };
       return data;
     } catch (error) {
-      Utilities.catchError(error)
+      Utilities.catchError(error);
     }
   }
 
   @Get('/')
   async getProfessions() {
     try {
-
       const profession = await this.professionsService.getProfessions();
       const data = {
         data: profession,
@@ -62,15 +60,13 @@ export class ProfessionsController {
 
       return data;
     } catch (error) {
-      Utilities.catchError(error)
+      Utilities.catchError(error);
     }
   }
-
 
   @Get('/:id')
   async getProfessionsById(@Param('id', ParseIntPipe) id: number) {
     try {
-
       const profession = await this.professionsService.getProfessionsById(id);
 
       const data = {
@@ -80,7 +76,7 @@ export class ProfessionsController {
 
       return data;
     } catch (error) {
-      Utilities.catchError(error)
+      Utilities.catchError(error);
     }
   }
 
@@ -104,22 +100,25 @@ export class ProfessionsController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: ProfessionsDto,
-    @Req() req // Capturar el usuario autenticado
+    @Req() req, // Capturar el usuario autenticado
   ) {
     try {
       const userId = req.user?.id; // Obtener el ID del usuario autenticado
 
       if (!userId) {
         return {
-          message: "Usuario no autenticado",
-          statusCode: 401
+          message: 'Usuario no autenticado',
+          statusCode: 401,
         };
       }
 
       // Agregar el user_update_id al payload
       payload.user_update_id = userId;
 
-      const profesion = await this.professionsService.updateProfession(id, payload);
+      const profesion = await this.professionsService.updateProfession(
+        id,
+        payload,
+      );
       return {
         data: profesion,
         message: 'Profesión actualizada correctamente',
@@ -128,8 +127,6 @@ export class ProfessionsController {
       Utilities.catchError(error);
     }
   }
-
-
 
   /* @Delete('/:id')
   async deleteProfession(@Param('id', ParseIntPipe) id: number) {
@@ -149,20 +146,20 @@ export class ProfessionsController {
   }*/
 
   @Delete('/:id')
-  async deleteProfession(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req
-  ) {
+  async deleteProfession(@Param('id', ParseIntPipe) id: number, @Req() req) {
     try {
       const userId = req.user?.id; // Obtener el ID del usuario autenticado
 
       if (!userId) {
         return {
-          message: "Usuario no autenticado",
-          statusCode: 401
+          message: 'Usuario no autenticado',
+          statusCode: 401,
         };
       }
-      const profession = await this.professionsService.deleteProfession(id, userId);
+      const profession = await this.professionsService.deleteProfession(
+        id,
+        userId,
+      );
 
       return {
         data: profession,
@@ -172,6 +169,4 @@ export class ProfessionsController {
       Utilities.catchError(error);
     }
   }
-
-
 }

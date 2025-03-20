@@ -1,33 +1,38 @@
-import { Asignatura } from "src/module/catalogos";
-import { StudentEntity } from "src/module/createEstudents";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Asignatura } from 'src/module/catalogos';
+import { StudentEntity } from 'src/module/createEstudents';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity({ name: 'calificaciones'})
+@Entity({ schema: 'calificaciones', name: 'calificaciones' })
 export class Calificaciones {
-    @PrimaryGeneratedColumn( 'increment', {
-        name: 'id',
-        type: 'int4',
+  @PrimaryGeneratedColumn('increment', {
+    name: 'id',
+    type: 'int4',
+  })
+  id?: number;
 
-    })
-    id?: number;
+  @ManyToOne(() => StudentEntity, (estudiante) => estudiante.id)
+  @JoinColumn({ name: 'estudiante_id' })
+  estudiante: StudentEntity;
 
-    @ManyToOne(()=> StudentEntity, (estudiante)=> estudiante.id)
-    @JoinColumn({name: 'estudiante_id'})
-    estudiante: StudentEntity;
+  @ManyToOne(() => Asignatura, (asignatura) => asignatura.id)
+  @JoinColumn({ name: 'asignatura_id' })
+  asignatura: Asignatura;
 
-    @ManyToOne(()=> Asignatura, (asignatura)=> asignatura.id)
-    @JoinColumn({name: 'asignatura_id'})
-    asignatura: Asignatura;
+  @Column({
+    name: 'nota_cualitativa',
+    type: 'varchar',
+  })
+  notaCualitativa: string;
 
-    @Column({
-        name: 'nota_cualitativa',
-        type: 'varchar'
-    })
-    notaCualitativa: string;
-
-    @Column({
-        name: 'nota_cuantitativa',
-        type: 'int4'
-    })
-    notaCuantitativa?: number
+  @Column({
+    name: 'nota_cuantitativa',
+    type: 'int4',
+  })
+  notaCuantitativa?: number;
 }

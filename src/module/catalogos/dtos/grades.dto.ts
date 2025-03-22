@@ -7,7 +7,6 @@ export class GradesDto{
     readonly id: number;
 
     @IsString()
-    @MaxLength(100)
     readonly grades: string
 
     /*created_at: Date

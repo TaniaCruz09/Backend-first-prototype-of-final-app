@@ -13,7 +13,7 @@ export class Modalidad {
         name: 'modalidad',
         type: 'varchar',
         // nullable: false,
-        length: 50,
+        //length: 50,
     })
     modalidad: string;
 

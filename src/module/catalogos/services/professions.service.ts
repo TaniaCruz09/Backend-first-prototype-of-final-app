@@ -22,7 +22,7 @@ export class ProfessionsService{
       }
 
     
-      async getProfessions(){
+      async getProfessions(): Promise<ProfessionsEntity[]>{
         try{
           const profession = await this.ProfessionsRepo.find();
           return profession;

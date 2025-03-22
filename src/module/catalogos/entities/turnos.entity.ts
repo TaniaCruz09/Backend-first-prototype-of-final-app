@@ -12,8 +12,8 @@ export class Turno {
     @Column({
         name: 'turno',
         type: 'varchar',
-        // nullable: false,
-        length: 50,
+        nullable: true,
+        //length: 50,
     })
     turno: string;
 

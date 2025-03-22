@@ -38,6 +38,47 @@ export class Docentes {
     })
     cedula_identidad: string;
 
+    @Column({
+        name:'telefono',
+        type: "varchar",
+        nullable: true 
+    })
+    telefono: string;
+
+    @Column({
+        name: 'fecha_nacimiento',
+        type: 'date',
+    })
+    fecha_nacimiento: Date
+
+    @Column({
+        name: 'direccion_domiciliar',
+        type: 'varchar',
+    })
+    direccion_domiciliar: string;
+
+    @Column({
+        name: 'fechaContratado',
+        type: 'date',
+    })
+    fechaContratado: Date;
+
+    @Column({
+        name: 'nombre_contacto_emergencia',
+        type: 'varchar',
+    })
+    nombre_contacto_emergencia: string;
+
+    @Column({
+        name: 'telefono_contacto_emergencia',
+        type: 'varchar',
+        nullable: true 
+    })
+    telefono_contacto_emergencia: string;
+
+    @OneToMany(()=> Grupos, (grupo) => grupo.docente)
+    grupos?: Grupos[];
+
     @ManyToOne(() => GenderEntity, (gender) => gender.docente)
     @JoinColumn()
     sexo: GenderEntity;
@@ -70,19 +111,6 @@ export class Docentes {
       })
     profesion: ProfessionsEntity[];
 
-    @Column({
-        name:'telefono',
-        type: "varchar",
-        length: 12,
-    })
-    telefono: string;
-
-    @Column({
-        name: 'fecha_nacimiento',
-        type: 'date',
-    })
-    fecha_nacimiento: Date
-    
     @ManyToOne(()=> Pais, (pais)=> pais.docente)
     @JoinColumn()
     pais: Pais
@@ -94,34 +122,4 @@ export class Docentes {
     @ManyToOne(()=> Municipio, (municipio)=> municipio.docente)
     @JoinColumn()
     municipio: Municipio;
-
-    @Column({
-        name: 'direccion_domiciliar',
-        type: 'varchar',
-        length: 200
-    })
-    direccion_domiciliar: string;
-
-    @Column({
-        name: 'fechaContratado',
-        type: 'date',
-    })
-    fechaContratado: Date;
-
-    @Column({
-        name: 'nombre_contacto_emergencia',
-        type: 'varchar',
-        length: 150
-    })
-    nombre_contacto_emergencia: string;
-
-    @Column({
-        name: 'telefono_contacto_emergencia',
-        type: 'varchar',
-        length: 12
-    })
-    telefono_contacto_emergencia: string;
-
-    @OneToMany(()=> Grupos, (grupo) => grupo.docente)
-    grupos?: Grupos[];
 }

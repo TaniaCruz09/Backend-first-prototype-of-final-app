@@ -7,7 +7,7 @@ export class createModalidadDto {
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(100)
+ // @MaxLength(100)
   modalidad: string;
 
   // @IsOptional()

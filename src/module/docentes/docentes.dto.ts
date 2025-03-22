@@ -40,7 +40,6 @@ export class DocentesDTO {
 
     @IsNotEmpty()
     @IsString()
-    @MaxLength(12)
     telefono: string;
 
     @IsNotEmpty()
@@ -61,7 +60,6 @@ export class DocentesDTO {
 
     @IsNotEmpty()
     @IsString()
-    @MaxLength(20)
     direccion_domiciliar: string;
 
     @IsNotEmpty()
@@ -75,7 +73,6 @@ export class DocentesDTO {
 
     @IsNotEmpty()
     @IsString()
-    @MaxLength(12)
     telefono_contacto_emergencia: string;
 
 

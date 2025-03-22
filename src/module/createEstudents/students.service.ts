@@ -46,19 +46,38 @@ export class StudentService{
 
     async updateStudent(id:number, payload: StudentsDto): Promise <StudentEntity> {
         try {
-            const student = await this.StudentRepo.preload({id, ...payload});
+            const student = await this.StudentRepo.findOne({ where: { id } });
+            if (!student) {
+                throw new NotFoundException("Profesión no encontrada");
+            }
+    
+            // Actualizar solo los campos enviados, conservando los valores previos
+            Object.assign(student, payload);
+    
+            // Asignar la fecha de actualización y el usuario que modifica
+            student.update_at = new Date();
+            student.user_update_id;
+
+
             return await this.StudentRepo.save(student)
         } catch (error) {
             Utilities.catchError(error)
         }
     }
 
-    async deleteStudent(id: number): Promise<StudentEntity> {
+    async deleteStudent(id: number,userId: number): Promise<StudentEntity> {
         try {
             const student = await this.StudentRepo.findOne({
-                where: {id: id}
+                where: { id } 
             })
-            return await this.StudentRepo.remove(student);
+            if (!student) {
+                throw new NotFoundException("Profesión no encontrada");
+            }
+    
+            // Registrar el usuario que eliminó y la fecha de eliminación
+            student.deleted_at = new Date();
+            student.deleted_at_id = userId;
+            return await this.StudentRepo.save(student);
         } catch (error) {
             Utilities.catchError(error)
         }

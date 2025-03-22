@@ -1,17 +1,32 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Req, UseGuards } from "@nestjs/common";
 import { StudentsDto } from "./student.dto";
 import { StudentService } from "./students.service";
 import { Utilities } from "../../common/helpers/utilities";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 
-
+@ApiTags('Estudiantes')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('student')
-export class StudentController{
-    constructor (private readonly studentService: StudentService){}
+export class StudentController {
+    constructor(private readonly studentService: StudentService) { }
 
-    @Post ('/')
-    async createStudent(@Body() payload: StudentsDto){
+    @Post('/')
+    async createStudent(@Body() payload: StudentsDto, @Req() req) {
         try {
+            const userId = req.user?.id; // Obtener el ID del usuario autenticado
+
+            if (!userId) {
+                return {
+                    message: "Usuario no autenticado",
+                    statusCode: 401
+                };
+            }
+
+            // Agregar el user_update_id al payload
+            payload.user_create_id = userId;
             const newStudent = await this.studentService.created(payload);
             const data = {
                 data: newStudent,
@@ -24,11 +39,11 @@ export class StudentController{
     }
 
     @Get('/')
-    async getStudent(){ 
+    async getStudent() {
         try {
             const student = await this.studentService.getStudent();
             const data = {
-                data : student,
+                data: student,
                 message: 'ok',
             };
             return data;
@@ -38,11 +53,11 @@ export class StudentController{
     }
 
     @Get('/:id')
-    async getStudentById(@Param('id', ParseIntPipe) id: number){
+    async getStudentById(@Param('id', ParseIntPipe) id: number) {
         try {
             const student = await this.studentService.getStudentById(id);
             const data = {
-                data:student,
+                data: student,
                 message: 'ok',
             };
             return data;
@@ -52,31 +67,49 @@ export class StudentController{
     }
 
     @Put('/:id')
-    async updateStudent( 
+    async updateStudent(
         @Param('id', ParseIntPipe) id: number,
         @Body() payload: StudentsDto,
-    ){ 
+        @Req() req // Capturar el usuario 
+    ) {
         try {
-            const student= await this.studentService.updateStudent(id, payload);
-            const data = {
+            const userId = req.user?.id; // Obtener el ID del usuario autenticado
+
+            if (!userId) {
+                return {
+                    message: "Usuario no autenticado",
+                    statusCode: 401
+                };
+            }
+
+            // Agregar el user_update_id al payload
+            payload.user_update_id = userId;
+            const student = await this.studentService.updateStudent(id, payload);
+            return {
                 data: student,
                 message: 'Estudiante actualizado correctamente',
-            }
-            return data;
+            };
         } catch (error) {
             Utilities.catchError(error)
         }
     }
 
     @Delete('/:id')
-    async deleteStudent(@Param('id',ParseIntPipe) id:number ) { 
+    async deleteStudent(@Param('id', ParseIntPipe) id: number, @Req() req) {
         try {
-            const student = await this.studentService.deleteStudent(id);
-            const data = {
+            const userId = req.user?.id; // Obtener el ID del usuario autenticado
+
+            if (!userId) {
+                return {
+                    message: "Usuario no autenticado",
+                    statusCode: 401
+                };
+            }
+            const student = await this.studentService.deleteStudent(id,userId);
+            return {
                 data: student,
-                message: 'Estudiante eliminado correctamente',
-            };
-            return data;
+                message: 'Profession marked as deleted',
+              };
         } catch (error) {
             Utilities.catchError(error)
         }

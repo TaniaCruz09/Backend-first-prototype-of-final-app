@@ -21,8 +21,6 @@ export class ProfessionsService {
     }
   }
 
-<<<<<<< HEAD
-    
       async getProfessions(): Promise<ProfessionsEntity[]>{
         try{
           const profession = await this.ProfessionsRepo.find();
@@ -33,16 +31,6 @@ export class ProfessionsService {
         
       }
       
-=======
-  async getProfessions() {
-    try {
-      const profession = await this.ProfessionsRepo.find();
-      return profession;
-    } catch (error) {
-      Utilities.catchError(error);
-    }
-  }
->>>>>>> 2d3fe51b1e0083e5c3be45878aa01b7d6af780f2
 
   async getProfessionsById(id: number): Promise<ProfessionsEntity> {
     try {

@@ -21,7 +21,7 @@ export class Turno {
   })
   id: number;
 
-<<<<<<< HEAD
+
     @Column({
         name: 'turno',
         type: 'varchar',
@@ -29,15 +29,7 @@ export class Turno {
         //length: 50,
     })
     turno: string;
-=======
-  @Column({
-    name: 'turno',
-    type: 'varchar',
-    // nullable: false,
-    length: 50,
-  })
-  turno: string;
->>>>>>> 2d3fe51b1e0083e5c3be45878aa01b7d6af780f2
+
 
   @OneToMany(() => Grupos, (grupos) => grupos.turno)
   grupos?: Grupos[];

@@ -57,7 +57,7 @@ export class GruposController {
     }
 
     @Delete('/:id')
-    async deleteGrupo(@Param('id') id: number){
+    async deleteGrupo(@Param('id', ParseIntPipe) id: number){
         try{
             const grupo = await this.grupoService.deleteGrupos(id);
             const data = {

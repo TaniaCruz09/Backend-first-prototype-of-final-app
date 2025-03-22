@@ -1,5 +1,21 @@
-import { IsArray, IsDate, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, MaxLength } from "class-validator";
-import { AcademicLevelEntity, Departamento, GenderEntity, Municipio, Pais, ProfessionsEntity } from "../catalogos";
+import {
+    IsArray,
+    IsDate,
+    IsNotEmpty,
+    IsNumber,
+    IsObject,
+    IsOptional,
+    IsString,
+    MaxLength,
+} from 'class-validator';
+import {
+    AcademicLevelEntity,
+    Departamento,
+    GenderEntity,
+    Municipio,
+    Pais,
+    ProfessionsEntity,
+} from '../catalogos';
 
 export class DocentesDTO {
     @IsOptional()
@@ -75,5 +91,27 @@ export class DocentesDTO {
     @IsString()
     telefono_contacto_emergencia: string;
 
+    @IsOptional()
+    @IsNumber()
+    user_create_id: number;
 
-} 
+    @IsOptional()
+    @IsDate()
+    created_at: Date;
+
+    @IsOptional()
+    @IsDate()
+    update_at: Date;
+
+    @IsOptional()
+    @IsNumber()
+    user_update_id: number;
+
+    @IsOptional()
+    @IsDate()
+    deleted_at: Date;
+
+    @IsOptional()
+    @IsNumber()
+    deleted_at_id: number;
+}

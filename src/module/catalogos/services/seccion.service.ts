@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm';
 import { Seccion } from '../entities/seccion.entity';
 import { Utilities } from '../../../common/helpers/utilities';
+import { CreateSeccionDTO } from '../dtos/seccion.dto';
 
 @Injectable()
 export class SeccionService {
@@ -12,16 +13,26 @@ export class SeccionService {
     private seccionRepository: Repository<Seccion>,
   ) {}
 
-  async create(seccion: Seccion): Promise<Seccion> {
-    try{
+  async create(payload: CreateSeccionDTO): Promise<Seccion> {
+    try {
+      const seccion = await this.seccionRepository.create(payload);
       return await this.seccionRepository.save(seccion);
     } catch (error) {
       Utilities.catchError(error);
     }
   }
 
+  async findAll(): Promise<Seccion[]> {
+    try {
+      const seccion = await this.seccionRepository.find();
+      return seccion;
+    } catch (error) {
+      Utilities.catchError(error);
+    }
+  }
+
   async findOne(id: number): Promise<Seccion> {
-    try{
+    try {
       const seccion = await this.seccionRepository.findOne({ where: { id } });
       return seccion;
     } catch (error) {
@@ -29,32 +40,38 @@ export class SeccionService {
     }
   }
 
-  async findAll(): Promise<Seccion[]> {
-    try{
-      return await this.seccionRepository.find();
-    } catch (error) {
-      Utilities.catchError(error);
-    }
-  }
+  async update(id: number, payload: CreateSeccionDTO): Promise<Seccion> {
+    try {
+      const seccion = await this.seccionRepository.findOne({ where: { id } });
+      if (!seccion) {
+        throw new NotFoundException('Seccion no encontrada');
+      }
+      // Actualizar solo los campos enviados, conservando los valores previos
+      Object.assign(seccion, payload);
 
-  async update(id: number, updateEtniaDTO: Partial<Seccion>): Promise<Seccion> {
-    try{
-      const seccion = await this.seccionRepository.preload({
-        id,
-        ...updateEtniaDTO,
-      });
+      // Asignar la fecha de actualización y el usuario que modifica
+      seccion.update_at = new Date();
+      seccion.user_update_id;
       return await this.seccionRepository.save(seccion);
     } catch (error) {
       Utilities.catchError(error);
     }
   }
 
-  async delete(id: number): Promise<void> {
-    try{
-      const result = await this.seccionRepository.delete(id);
+  async delete(id: number, userId: number): Promise<Seccion> {
+    try {
+      const seccion = await this.seccionRepository.findOne({ where: { id } });
+      if (!seccion) {
+        throw new NotFoundException('Profesión no encontrada');
+      }
+
+      // Registrar el usuario que eliminó y la fecha de eliminación
+      seccion.deleted_at = new Date();
+      seccion.deleted_at_id = userId;
+
+      return await this.seccionRepository.save(seccion);
     } catch (error) {
       Utilities.catchError(error);
-    }  
+    }
   }
 }
-

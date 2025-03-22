@@ -1,27 +1,43 @@
-import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
+import {
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateSeccionDTO {
-    @IsOptional()
-    @IsNumber()
-    id:number;
+  @IsOptional()
+  @IsNumber()
+  id: number;
 
-    @IsNotEmpty()
-    @IsString()
-    @MaxLength(20)
-    seccion: string;
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(20)
+  seccion: string;
 
-//   @IsOptional()
-//   @IsDate()
-//   create_at: Date;
+  @IsOptional()
+  @IsNumber()
+  user_create_id: number;
 
-//   @IsOptional()
-//   @IsDate()
-//   updated_at: Date;
+  @IsOptional()
+  @IsDate()
+  created_at: Date;
 
-//   @IsOptional()
-//   user_id: number;
+  @IsOptional()
+  @IsDate()
+  update_at: Date;
 
-//   @IsOptional()
-//   @IsDate()
-//   user_update_id: number;
+  @IsOptional()
+  @IsNumber()
+  user_update_id: number;
+
+  @IsOptional()
+  @IsDate()
+  deleted_at: Date;
+
+  @IsOptional()
+  @IsNumber()
+  deleted_at_id: number;
 }

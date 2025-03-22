@@ -1,11 +1,25 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  ParseIntPipe,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { ModalidadService } from '../services/modalidad.service';
 import { createModalidadDto } from '../dtos/modalidad.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Utilities } from '../../../common/helpers/utilities';
+import { JwtAuthGuard } from 'src/module/auth/guards/jwt.guard';
 
 @ApiTags('Modalidad')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('modalidad')
 export class ModalidadController {
   constructor(private readonly modalidadService: ModalidadService) {}
@@ -24,7 +38,7 @@ export class ModalidadController {
     }
   }
 
-  @Get(':id')
+  @Get('/:id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     try {
       const modalidad = await this.modalidadService.findOne(id);
@@ -39,12 +53,24 @@ export class ModalidadController {
   }
 
   @Post('/')
-  async create(@Body() payload: createModalidadDto){
+  async create(@Body() payload: createModalidadDto, @Req() req) {
     try {
+      const userId = req.user?.id; //obtener el ID del usuario autenticado
+
+      if (!userId) {
+        return {
+          message: 'Usuario no autenticado',
+          statusCode: 401,
+        };
+      }
+
+      //Agregar el user_update_id al payload
+      payload.user_create_id = userId;
+
       const modalidad = await this.modalidadService.create(payload);
       const data = {
         data: modalidad,
-        message: 'ok',
+        message: 'creado correctamente',
       };
       return data;
     } catch (error) {
@@ -54,14 +80,26 @@ export class ModalidadController {
 
   @Put('/:id')
   async update(
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) id: number,
     @Body() payload: createModalidadDto,
-  ){
-    try{
+    @Req() req, // Capturar el usuario autenticado
+  ) {
+    try {
+      const userId = req.user?.id; // Obtener el ID del usuario autenticado
+
+      if (!userId) {
+        return {
+          message: 'Usuario no autenticado',
+          statusCode: 401,
+        };
+      }
+
+      // Agregar el user_update_id al payload
+      payload.user_update_id = userId;
       const modalidad = await this.modalidadService.update(id, payload);
       const data = {
         data: modalidad,
-        message: 'ok',
+        message: 'modalidad actualizada correctamente',
       };
       return data;
     } catch (error) {
@@ -70,12 +108,20 @@ export class ModalidadController {
   }
 
   @Delete('/:id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number, @Req() req) {
     try {
-      const modalidad = await this.modalidadService.delete(id);
+      const userId = req.user?.id; // Obtener el ID del usuario autenticado
+
+      if (!userId) {
+        return {
+          message: 'Usuario no autenticado',
+          statusCode: 401,
+        };
+      }
+      const modalidad = await this.modalidadService.delete(id, userId);
       const data = {
         data: modalidad,
-        message: 'ok',
+        message: 'Modalidad eliminada correctamente',
       };
       return data;
     } catch (error) {

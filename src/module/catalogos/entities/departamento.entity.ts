@@ -1,6 +1,7 @@
-import { StudentEntity } from "src/module/createEstudents";
+import { StudentEntity } from "../../createEstudents";
 import { Docentes } from "../../docentes/docentes.entity";
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Centro } from "../../centroEducativo/entities/centro.entity";
 
 @Entity({ schema: 'catalogos', name: 'departamento'})
 export class Departamento {
@@ -20,4 +21,9 @@ export class Departamento {
 
     @OneToMany(()=> StudentEntity, (student)=> student.departamento)
     student?: StudentEntity;
+
+    @OneToMany (() => Centro, (centro) => centro.departamento)
+    centro?: Centro;
+
+
 }

@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import { Repository } from 'typeorm';
 import { Modalidad } from '../entities/modalidad.entity';
 import { Utilities } from '../../../common/helpers/utilities';
+import { createModalidadDto } from '../dtos/modalidad.dto';
 
 @Injectable()
 export class ModalidadService {
@@ -12,8 +13,9 @@ export class ModalidadService {
     private modalidadRepository: Repository<Modalidad>,
   ) {}
 
-  async create(modalidad: Modalidad): Promise<Modalidad> {
-    try{
+  async create(payload: createModalidadDto): Promise<Modalidad> {
+    try {
+      const modalidad = await this.modalidadRepository.create(payload);
       return await this.modalidadRepository.save(modalidad);
     } catch (error) {
       Utilities.catchError(error);
@@ -21,8 +23,10 @@ export class ModalidadService {
   }
 
   async findOne(id: number): Promise<Modalidad> {
-    try{
-      const modalidad = await this.modalidadRepository.findOne({ where: { id } });
+    try {
+      const modalidad = await this.modalidadRepository.findOne({
+        where: { id },
+      });
       // if (!modalidad) {
       //   throw new NotFoundException(`modalidad con ID ${id} no encontrado`);
       // }
@@ -33,32 +37,50 @@ export class ModalidadService {
   }
 
   async findAll(): Promise<Modalidad[]> {
-    try{
-      return await this.modalidadRepository.find();
+    try {
+      const modalidad = await this.modalidadRepository.find();
+      return modalidad;
     } catch (error) {
       Utilities.catchError(error);
     }
   }
 
-  async update(id: number, updateEtniaDTO: Partial<Modalidad>): Promise<Modalidad> {
-    try{
-
-      const modalidad = await this.modalidadRepository.preload({
-        id,
-        ...updateEtniaDTO,
+  async update(id: number, payload: createModalidadDto): Promise<Modalidad> {
+    try {
+      const modalidad = await this.modalidadRepository.findOne({
+        where: { id },
       });
+      if (!modalidad) {
+        throw new NotFoundException('Modalidad no encotrando');
+      }
+      // Actualizar solo los campos enviados, conservando los valores previos
+      Object.assign(modalidad, payload);
+
+      // Asignar la fecha de actualización y el usuario que modifica
+      modalidad.update_at = new Date();
+      modalidad.user_update_id;
+
       return await this.modalidadRepository.save(modalidad);
     } catch (error) {
       Utilities.catchError(error);
     }
   }
 
-  async delete(id: number): Promise<void> {
-    try{
-      const result = await this.modalidadRepository.delete(id);
+  async delete(id: number, userId: number): Promise<Modalidad> {
+    try {
+      const modalidad = await this.modalidadRepository.findOne({
+        where: { id },
+      });
+      if (!modalidad) {
+        throw new NotFoundException('Profesión no encontrada');
+      }
+      // Registrar el usuario que eliminó y la fecha de eliminación
+      modalidad.deleted_at = new Date();
+      modalidad.deleted_at_id = userId;
+
+      return await this.modalidadRepository.save(modalidad); // Guardar los cambios
     } catch (error) {
       Utilities.catchError(error);
     }
   }
 }
-

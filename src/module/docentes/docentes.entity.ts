@@ -60,47 +60,89 @@ export class Docentes {
   })
   cedula_identidad: string;
 
-    @Column({
-        name:'telefono',
-        type: "varchar",
-        nullable: true 
-    })
-    telefono: string;
+  @Column({
+    name: 'telefono',
+    type: "varchar",
+    nullable: true
+  })
+  telefono: string;
 
-    @Column({
-        name: 'fecha_nacimiento',
-        type: 'date',
-    })
-    fecha_nacimiento: Date
+  @Column({
+    name: 'fecha_nacimiento',
+    type: 'date',
+  })
+  fecha_nacimiento: Date
 
-    @Column({
-        name: 'direccion_domiciliar',
-        type: 'varchar',
-    })
-    direccion_domiciliar: string;
+  @Column({
+    name: 'direccion_domiciliar',
+    type: 'varchar',
+  })
+  direccion_domiciliar: string;
 
-    @Column({
-        name: 'fechaContratado',
-        type: 'date',
-    })
-    fechaContratado: Date;
+  @Column({
+    name: 'fechaContratado',
+    type: 'date',
+  })
+  fechaContratado: Date;
 
-    @Column({
-        name: 'nombre_contacto_emergencia',
-        type: 'varchar',
-    })
-    nombre_contacto_emergencia: string;
+  @Column({
+    name: 'nombre_contacto_emergencia',
+    type: 'varchar',
+  })
+  nombre_contacto_emergencia: string;
 
-    @Column({
-        name: 'telefono_contacto_emergencia',
-        type: 'varchar',
-        nullable: true 
-    })
-    telefono_contacto_emergencia: string;
+  @Column({
+    name: 'telefono_contacto_emergencia',
+    type: 'varchar',
+    nullable: true
+  })
+  telefono_contacto_emergencia: string;
 
-    @ManyToOne(() => GenderEntity, (gender) => gender.docente)
-    @JoinColumn()
-    sexo: GenderEntity;
+  // Fecha y hora de la última actualización del registro
+  @UpdateDateColumn({
+    name: 'update_at',
+    type: 'timestamp',
+    onUpdate: 'CURRENT_TIMESTAMP',
+    transformer: {
+      to: (value: Date) => value,
+      from: (value: Date) =>
+        moment(value).tz('America/Managua').format('YYYY-MM-DD hh:mm A'),
+    },
+  })
+  update_at: Date;
+
+  // Fecha y hora en que se creó el registro
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP', // Guarda la fecha en UTC por defecto
+    transformer: {
+      to: (value: Date) => value, // Guarda la fecha tal como es
+      from: (value: Date) =>
+        moment(value).tz('America/Managua').format('YYYY-MM-DD hh:mm A'), // Formatea a hora de Nicaragua
+    },
+  })
+  created_at: Date;
+
+  //ID del usuario que creó el registro
+  @Column({ name: 'user_create_id', type: 'int4', nullable: true }) // Nuevo campo
+  user_create_id: number;
+
+  // ID del usuario que realizó la última actualización del registro
+  @Column({ name: 'user_update_id', type: 'int4', nullable: true })
+  user_update_id: number;
+
+  // Fecha y hora en que el registro fue eliminado
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deleted_at: Date;
+
+  // ID del usuario que elimino el registro
+  @Column({ name: 'deleted_at_id', type: 'int4', nullable: true })
+  deleted_at_id: number;
+
+  @ManyToOne(() => GenderEntity, (gender) => gender.docente)
+  @JoinColumn()
+  sexo: GenderEntity;
 
   @ManyToMany(
     () => AcademicLevelEntity,
@@ -129,48 +171,6 @@ export class Docentes {
   @OneToMany(() => Grupos, (grupo) => grupo.docente)
   @JoinColumn({ name: 'grupo_id' })
   grupos?: Grupos[];
-
-  //ID del usuario que creó el registro
-  @Column({ name: 'user_create_id', type: 'int4', nullable: true }) // Nuevo campo
-  user_create_id: number;
-
-  // Fecha y hora en que se creó el registro
-  @CreateDateColumn({
-    name: 'created_at',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP', // Guarda la fecha en UTC por defecto
-    transformer: {
-      to: (value: Date) => value, // Guarda la fecha tal como es
-      from: (value: Date) =>
-        moment(value).tz('America/Managua').format('YYYY-MM-DD hh:mm A'), // Formatea a hora de Nicaragua
-    },
-  })
-  created_at: Date;
-
-  // Fecha y hora de la última actualización del registro
-  @UpdateDateColumn({
-    name: 'update_at',
-    type: 'timestamp',
-    onUpdate: 'CURRENT_TIMESTAMP',
-    transformer: {
-      to: (value: Date) => value,
-      from: (value: Date) =>
-        moment(value).tz('America/Managua').format('YYYY-MM-DD hh:mm A'),
-    },
-  })
-  update_at: Date;
-
-  // ID del usuario que realizó la última actualización del registro
-  @Column({ name: 'user_update_id', type: 'int4', nullable: true })
-  user_update_id: number;
-
-  // Fecha y hora en que el registro fue eliminado
-  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
-  deleted_at: Date;
-
-  // ID del usuario que elimino el registro
-  @Column({ name: 'deleted_at_id', type: 'int4', nullable: true })
-  deleted_at_id: number;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'user_create_id' }) // Se enlaza con el usuario que creó el registro

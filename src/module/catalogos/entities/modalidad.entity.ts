@@ -21,13 +21,15 @@ export class Modalidad {
   })
   id: number;
 
-  @Column({
-    name: 'modalidad',
-    type: 'varchar',
-    // nullable: false,
-    length: 50,
-  })
-  modalidad: string;
+
+    @Column({
+        name: 'modalidad',
+        type: 'varchar',
+        // nullable: false,
+        //length: 50,
+    })
+    modalidad: string;
+    
 
   @OneToMany(() => Grupos, (grupo) => grupo.modalidad)
   grupos?: Grupos[];

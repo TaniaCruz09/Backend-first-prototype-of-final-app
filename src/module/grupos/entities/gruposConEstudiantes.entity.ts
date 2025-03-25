@@ -21,15 +21,6 @@ export class GruposConEstudiantes {
   })
   id: number;
 
-  @ManyToOne(() => Grupos, (grupo) => grupo.grupoConEstudiantes)
-  grupo: Grupos;
-
-  @ManyToOne(
-    () => StudentEntity,
-    (estudiante) => estudiante.grupoConEstudiantes,
-  )
-  estudiante: StudentEntity;
-
   //ID del usuario que creó el registro
   @Column({ name: 'user_create_id', type: 'int4', nullable: true }) // Nuevo campo
   user_create_id: number;
@@ -71,6 +62,15 @@ export class GruposConEstudiantes {
   // ID del usuario que elimino el registro
   @Column({ name: 'deleted_at_id', type: 'int4', nullable: true })
   deleted_at_id: number;
+
+  @ManyToOne(() => Grupos, (grupo) => grupo.grupoConEstudiantes)
+  grupo: Grupos;
+
+  @ManyToOne(
+    () => StudentEntity,
+    (estudiante) => estudiante.grupoConEstudiantes,
+  )
+  estudiante: StudentEntity;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'user_create_id' }) // Se enlaza con el usuario que creó el registro

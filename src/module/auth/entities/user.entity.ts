@@ -1,7 +1,10 @@
 import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "./roles.entity";
 import * as bcrypt from 'bcrypt';
-import { AcademicLevelEntity, ProfessionsEntity } from "src/module/catalogos";
+import { AcademicLevelEntity, GenderEntity, ProfessionsEntity } from "src/module/catalogos";
+import { StudentEntity } from "src/module/createEstudents";
+import { SemestreEntity } from "src/module/catalogos/entities/semestres.entity";
+
 
 @Entity({name: "users"})
 export class User {
@@ -24,7 +27,16 @@ export class User {
     professions: ProfessionsEntity //ESTOY TRABAJANDO EN ESTO
 
     @ManyToOne(()=> AcademicLevelEntity,(academicLevel)=>academicLevel.id )
-    academicLevel: AcademicLevelEntity
+    academicLevel: AcademicLevelEntity//ESTOY TRABAJANDO EN ESTO
+
+    @ManyToOne(()=> GenderEntity,(gender)=>gender.id )
+    gender: GenderEntity
+
+    @ManyToOne(()=> StudentEntity,(student)=>student.id )
+    student: StudentEntity
+
+    @ManyToOne(()=> SemestreEntity,(sementre)=>sementre.id )
+    sementre: SemestreEntity
 
     @ManyToMany(() => Role, (role) => role.users)
   @JoinTable({

@@ -1,3 +1,7 @@
+export { SemestreController } from "./controllers/semestres.controller";
+export { SemestreDto } from "./dtos/semestres.dto";
+export { SemestreEntity } from "./entities/semestres.entity";
+export { SemestreService } from "./services/semestre.service";
 export { AsignaturaController } from "./controllers/asignatura.controller";
 export { DepartamentoController } from "./controllers/departamento.controller";
 export { MunicipioController } from "./controllers/municipio.controller";
@@ -42,6 +46,7 @@ export { AcademicLevelService } from "./services/academiclevel.service";
 export { GenderService } from "./services/gender.service";
 export { GradesService } from "./services/grades.service";
 export { ProfessionsService } from "./services/professions.service";
+
 
 
 

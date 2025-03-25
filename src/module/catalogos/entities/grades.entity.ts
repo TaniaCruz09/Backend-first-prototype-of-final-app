@@ -15,10 +15,9 @@ export class GradesEntity {
   @Column({
     name: 'grades',
     type: 'varchar',
-    length: 100,
   })
   grades: string;
 
   @OneToMany(() => Grupos, (grupo) => grupo.grado)
-  grupos?: Grupos[]
+  grupos?: Grupos[];
 }

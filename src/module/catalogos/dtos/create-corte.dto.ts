@@ -2,10 +2,12 @@ import {
   IsDate,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
+import { SemestreEntity } from '../entities/semestres.entity';
 
 export class createCortesDto {
   @IsOptional()
@@ -22,9 +24,9 @@ export class createCortesDto {
   // @MaxLength(30)
   corte: string;
 
-  @IsOptional()
-  @IsNumber()
-  semestre_padre_id: number;
+  @IsObject()
+  @IsNotEmpty()
+  semestre: SemestreEntity;
 
   @IsOptional()
   @IsNumber()

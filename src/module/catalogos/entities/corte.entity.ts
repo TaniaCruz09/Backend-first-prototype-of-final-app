@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import * as moment from 'moment-timezone';
 import { User } from '../../../module/auth/entities';
+import { SemestreEntity } from './semestres.entity';
 
 @Entity({ schema: 'catalogos', name: 'cortes' })
 export class Cortes {
@@ -32,12 +33,8 @@ export class Cortes {
   })
   corte: string;
 
-  @Column({
-    type: 'int4',
-    // length: 30,
-    name: 'semestre_padre_id',
-  })
-  semestre_padre_id: number;
+  @ManyToOne(() => SemestreEntity, (semestre) => semestre.corte)
+  semestre: SemestreEntity;
 
   // ID del Usuario que creo el registro
   @Column({ name: 'user_create_id', type: 'int4', nullable: true })

@@ -1,40 +1,51 @@
-import { IsDate, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
-
+import {
+  IsDate,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+import { Cortes } from '../entities/corte.entity';
 
 export class SemestreDto {
-    @IsNumber()
-    @IsOptional()
-    readonly id: number;
+  @IsNumber()
+  @IsOptional()
+  readonly id: number;
 
-    @IsString()
-    @MaxLength(30)
-    abreviatura: string;
+  @IsString()
+  @MaxLength(30)
+  abreviatura: string;
 
-    @IsString()
-    @MaxLength(30)
-    semestre: string
+  @IsString()
+  @MaxLength(30)
+  semestre: string;
 
-    @IsOptional()
-    @IsNumber()
-    user_create_id: number;
+  @IsObject()
+  @IsOptional()
+  corte?: Cortes;
 
-    @IsOptional()
-    @IsDate()
-    created_at: Date
+  @IsOptional()
+  @IsNumber()
+  user_create_id: number;
 
-    @IsOptional()
-    @IsDate()
-    update_at: Date
+  @IsOptional()
+  @IsDate()
+  created_at: Date;
 
-    @IsOptional()
-    @IsNumber()
-    user_update_id: number;
+  @IsOptional()
+  @IsDate()
+  update_at: Date;
 
-    @IsOptional()
-    @IsDate()
-    deleted_at: Date;
+  @IsOptional()
+  @IsNumber()
+  user_update_id: number;
 
-    @IsOptional()
-    @IsNumber()
-    deleted_at_id: number;
+  @IsOptional()
+  @IsDate()
+  deleted_at: Date;
+
+  @IsOptional()
+  @IsNumber()
+  deleted_at_id: number;
 }

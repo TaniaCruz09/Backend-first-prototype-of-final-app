@@ -1,27 +1,25 @@
-import { StudentEntity } from "src/module/createEstudents";
-import { Docentes } from "../../docentes/docentes.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { StudentEntity } from 'src/module/createEstudents';
+import { Docentes } from '../../docentes/docentes.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity({ schema: 'catalogos', name: 'gender' })
+export class GenderEntity {
+  @PrimaryGeneratedColumn({
+    name: 'id',
+    type: 'int4',
+  })
+  id?: number;
 
-@Entity({schema: 'catalogos', name: 'gender'})
-export class GenderEntity{
-    @PrimaryGeneratedColumn({
-        name: 'id',
-        type: 'int4'
-    })
-    id?: number;
+  @Column({
+    name: 'gender',
+    type: 'varchar',
+    length: 100,
+  })
+  gender: string;
 
-    @Column({
-        name: 'gender',
-        type: 'varchar',
-        length:100
-    })
-    gender:string
+  @OneToMany(() => Docentes, (docente) => docente.sexo)
+  docente: Docentes;
 
-    @OneToMany(() => Docentes, (docente) => docente.sexo)
-    docente: Docentes;
-
-    @OneToMany(()=> StudentEntity, (student)=> student.gender)
-    student?: StudentEntity;
-
+  @OneToMany(() => StudentEntity, (student) => student.gender)
+  student?: StudentEntity;
 }

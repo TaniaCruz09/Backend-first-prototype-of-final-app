@@ -36,19 +36,23 @@ import { MunicipioService } from "./services/municipio.service";
 import { Pais } from "./entities/pais.entity";
 import { PaisController } from "./controllers/pais.controller";
 import { PaisService } from "./services/pais.service";
+import { Cortes } from "./entities/corte.entity";
+import { CortesController } from "./controllers/cortes.controller";
+import { CortesService } from "./services/cortes.service";
+
 
 
 
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AcademicLevelEntity, Etnia, GenderEntity, GradesEntity, Modalidad, ProfessionsEntity, Turno, Seccion, Asignatura, Departamento, Municipio, Pais]),
+    TypeOrmModule.forFeature([AcademicLevelEntity, Etnia, GenderEntity, GradesEntity, Modalidad, ProfessionsEntity, Turno, Seccion, Asignatura, Departamento, Municipio, Pais, Cortes]),
   ],
   controllers: [
-    AcademicLevelController, EtniaController, GenderController, GradesController, ModalidadController, ProfessionsController, TurnoController, SeccionController, AsignaturaController, DepartamentoController, MunicipioController, PaisController
+    AcademicLevelController, EtniaController, GenderController, GradesController, ModalidadController, ProfessionsController, TurnoController, SeccionController, AsignaturaController, DepartamentoController, MunicipioController, PaisController, CortesController
   ],
   providers: [
-    AcademicLevelService, EtniaService, GenderService, GradesService, ModalidadService, ProfessionsService, TurnoService, SeccionService, AsignaturaService, DepartamentoService, MunicipioService, PaisService
+    AcademicLevelService, EtniaService, GenderService, GradesService, ModalidadService, ProfessionsService, TurnoService, SeccionService, AsignaturaService, DepartamentoService, MunicipioService, PaisService, CortesService
     
   ],
   exports: [CatalogoModule, TypeOrmModule],

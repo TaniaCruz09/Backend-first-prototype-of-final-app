@@ -7,15 +7,24 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class createDepartamentoDto {
+export class createCortesDto {
   @IsOptional()
   @IsNumber()
-  id: number;
+  id?: number;
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(100)
-  departamento: string;
+  // @MaxLength(30)
+  abreviatura: string;
+
+  @IsNotEmpty()
+  @IsString()
+  // @MaxLength(30)
+  corte: string;
+
+  @IsOptional()
+  @IsNumber()
+  semestre_padre_id: number;
 
   @IsOptional()
   @IsNumber()
@@ -23,11 +32,15 @@ export class createDepartamentoDto {
 
   @IsOptional()
   @IsDate()
-  created_at: Date;
+  create_at: Date;
 
   @IsOptional()
   @IsDate()
   update_at: Date;
+
+  @IsOptional()
+  @IsNumber()
+  user_id: number;
 
   @IsOptional()
   @IsNumber()
@@ -36,8 +49,4 @@ export class createDepartamentoDto {
   @IsOptional()
   @IsDate()
   deleted_at: Date;
-
-  @IsOptional()
-  @IsNumber()
-  deleted_at_id: number;
 }

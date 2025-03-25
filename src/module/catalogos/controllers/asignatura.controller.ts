@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe, HttpException, HttpStatus, Req } from '@nestjs/common';
 import { AsignaturaService } from '../services/asignatura.service';
 import { createAsignaturaDto } from '../dtos/asignatura.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -39,11 +39,22 @@ export class AsignaturaController {
     }
 
     @Post('/')
-    async create(@Body() payload: createAsignaturaDto) {
+    async create(@Body() payload: createAsignaturaDto, @Req() req) {
         try {
-            const asignatura = await this.asignaturaService.create(payload);
+            const userId = req.user?.id;
+
+            if (!userId) {
+                return {
+                    message: 'Usuario no encontrado',
+                    statusCode: 401
+                };
+            }
+
+            payload.user_create_id = userId;
+
+            const newAsignatura = await this.asignaturaService.create(payload);
             const data = {
-                data: asignatura,
+                data: newAsignatura,
                 message: 'Asignatura creada correctamente',
             };
             return data;
@@ -56,28 +67,47 @@ export class AsignaturaController {
     async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() payload: createAsignaturaDto,
+        @Req() req
     ) {
         try {
+            const userId = req.user?.id;
+
+            if (!userId) {
+                return {
+                    message: 'Usuario no autenticado',
+                    statusCode: 401
+                };
+            }
+
+            payload.user_update_id = userId;
+
             const asignatura = await this.asignaturaService.update(id, payload);
-            const data = {
+            return {
                 data: asignatura,
-                message: 'Asignatura Actualizada correctamente',
+                message: 'Asignatura actualizada correctamente',
             };
-            return data;
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
     @Delete('/:id')
-    async delete(@Param('id', ParseIntPipe) id: number) {
+    async delete(@Param('id', ParseIntPipe) id: number, @Req() req) {
         try {
-            const asignatura = await this.asignaturaService.delete(id);
-            const data = {
+            const userId = req.user?.id;
+
+            if(!userId) {
+                return {
+                    message: 'Usuario no autenticado',
+                    statusCode: 401
+                };
+            }
+
+            const asignatura = await this.asignaturaService.delete(id, userId);
+            return {
                 data: asignatura,
                 message: 'Asignatura eliminada correctamente',
             };
-            return data;
         } catch (error) {
             Utilities.catchError (error)
         }

@@ -3,17 +3,19 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Departamento } from "../entities/departamento.entity";
 import { Repository } from "typeorm";
 import { Utilities } from "../../../common/helpers/utilities";
+import { createDepartamentoDto } from "../dtos/departamento.dto";
 
 
 @Injectable()
 export class DepartamentoService {
     constructor(
         @InjectRepository(Departamento)
-        private departamentoRepository: Repository <Departamento>,
+        private readonly departamentoRepository: Repository <Departamento>,
     ) {}
-
-    async create(departamento: Departamento): Promise<Departamento> {
+//Departamento a createDepartamentoDto
+    async create(payload: createDepartamentoDto): Promise<Departamento> {
         try {
+            const departamento = await this.departamentoRepository.create(payload)
             return await this.departamentoRepository.save(departamento);
         } catch (error) {
             Utilities.catchError (error)
@@ -31,27 +33,40 @@ export class DepartamentoService {
 
     async findAll(): Promise<Departamento[]> {
         try {
-            return await this.departamentoRepository.find();
+            const municipio = await this.departamentoRepository.find();
+            return municipio;            
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
-    async update(id: number, updateDepartamentoDTO: Partial<Departamento>): Promise<Departamento> {
+    async update(id: number, payload: Partial<Departamento>): Promise<Departamento> {
         try {
-            const departamento = await this.departamentoRepository.preload({
-                id,
-                ...updateDepartamentoDTO,
+            const departamento = await this.departamentoRepository.findOne({
+                where: { id }
             });
+
+            Object.assign(departamento, payload);
+
+            departamento.update_at = new Date();
+            departamento.user_update_id;
+
             return await this.departamentoRepository.save(departamento);
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
-    async delete(id: number): Promise<void> {
+    async delete(id: number, userId: number): Promise<Departamento> {
         try {
-            const result = await this.departamentoRepository.delete(id);
+            const departamento = await this.departamentoRepository.findOne({
+                where: { id }
+            });
+
+            departamento.deleted_at = new Date()
+            departamento.deleted_at_id = userId;
+
+            return await this.departamentoRepository.save(departamento)
             
         } catch (error) {
             Utilities.catchError (error)

@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe, UseGuards, Req } from '@nestjs/common';
 import { DepartamentoService } from '../services/departamento.service';
 import { createDepartamentoDto } from '../dtos/departamento.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Utilities } from '../../../common/helpers/utilities';
+import { JwtAuthGuard } from 'src/module/auth/guards/jwt.guard';
 
 
     @ApiTags('Departamento')
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Controller('departamento')
     export class DepartamentoController {
     constructor(private readonly departamentoService: DepartamentoService) {}
@@ -40,11 +42,22 @@ import { Utilities } from '../../../common/helpers/utilities';
     }
 
     @Post('/')
-    async create(@Body() payload: createDepartamentoDto){
+    async create(@Body() payload: createDepartamentoDto, @Req() req){
         try {
-            const departamento = await this.departamentoService.create(payload);
+            const userId = req.user?.id;
+
+            if (!userId) {
+                return { 
+                    message: 'No se encontró el usuario',
+                    statusCode: 401
+                };
+            }
+
+            payload.user_create_id = userId;
+
+            const newDepartamento = await this.departamentoService.create(payload);
             const data = {
-            data: departamento,
+            data: newDepartamento,
             message: 'Departamento creado correctamente',
             };
             return data;
@@ -57,28 +70,45 @@ import { Utilities } from '../../../common/helpers/utilities';
     async update(
         @Param('id', ParseIntPipe) id: number, 
         @Body() payload: createDepartamentoDto,
+        @Req() req
     ){
         try {
+            const userId = req.user?.id;
+            if (!userId) {
+                return {
+                    message: 'Usuario no encontrado',
+                    statusCode: 401
+                };
+            }
+
+            payload.user_update_id = userId;
+
             const departamento = await this.departamentoService.update(id, payload);
-            const data = {
+            return {
             data: departamento,
             message: 'Departamento actualizado correctamente',
             };
-            return data;
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
     @Delete('/:id')
-    async delete(@Param('id', ParseIntPipe) id: number) {
+    async delete(@Param('id', ParseIntPipe) id: number, @Req() req) {
         try {
-            const departamento = await this.departamentoService.delete(id);
-            const data = {
+            const userId = req.user?.id;
+
+            if (!userId) {
+                return {
+                    message: 'Usuario no autenticado',
+                    statusCode: 401
+                };
+            }
+            const departamento = await this.departamentoService.delete(id, userId);
+            return {
             data: departamento,
             message: 'Departamento eliminado correctamente',
             };
-            return data; 
         } catch (error) {
             Utilities.catchError (error)
         }

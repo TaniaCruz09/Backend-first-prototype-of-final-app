@@ -3,17 +3,20 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Asignatura } from "../entities/asignatura.entity";
 import { Repository } from "typeorm";
 import { Utilities } from "../../../common/helpers/utilities";
+import { createAsignaturaDto } from "../dtos/asignatura.dto";
 
 @Injectable()
 export class AsignaturaService {
     constructor(
         @InjectRepository(Asignatura)
-        private asignaturaRepository: Repository <Asignatura>,
+        private readonly asignaturaRepository: Repository <Asignatura>,
     ) {}
 
     // Funcion para crear asignatura
-    async create(asignatura: Asignatura): Promise<Asignatura> {
+    // Asignatira por createAsignaturaDto
+    async create(payload: createAsignaturaDto ): Promise<Asignatura> {
         try {
+            const asignatura = await this.asignaturaRepository.create(payload);
             return await this.asignaturaRepository.save(asignatura);
         } catch (error) {
             Utilities.catchError (error)
@@ -32,27 +35,40 @@ export class AsignaturaService {
 
     async findAll(): Promise<Asignatura[]> {
         try {
-            return await this.asignaturaRepository.find();
+            const asignatura = await this.asignaturaRepository.find();
+            return asignatura;
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
-    async update(id: number, updateAsignaturaDTO: Partial<Asignatura>): Promise<Asignatura> {
+    async update(id: number, payload: Partial<Asignatura>): Promise<Asignatura> {
         try {
-            const asignatura = await this.asignaturaRepository.preload({
-                id,
-                ...updateAsignaturaDTO,
+            const asignatura = await this.asignaturaRepository.findOne({
+                where: { id }
             });
+
+            Object.assign(asignatura, payload);
+
+            asignatura.update_at = new Date ();
+            asignatura.user_update_id;
+
             return await this.asignaturaRepository.save(asignatura);
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
-    async delete(id: number): Promise<void> {
+    async delete(id: number, userId: number): Promise<Asignatura> {
         try {
-            const result = await this.asignaturaRepository.delete(id);
+            const asignatura = await this.asignaturaRepository.findOne({
+                where: { id }
+            });
+
+            asignatura.deleted_at = new Date()
+            asignatura.deleted_at_id = userId;
+
+            return await this.asignaturaRepository.save(asignatura)
         } catch (error) {
             Utilities.catchError (error)
         }

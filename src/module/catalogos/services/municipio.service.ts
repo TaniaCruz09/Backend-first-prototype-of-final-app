@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Municipio } from "../entities/municipio.entity";
 import { Repository } from "typeorm";
 import { Utilities } from "../../../common/helpers/utilities";
+import { createMunicipioDto } from "../dtos/municipio.dto";
 
 @Injectable()
 export class MunicipioService {
@@ -11,8 +12,9 @@ export class MunicipioService {
         private municipioRepository: Repository<Municipio>,
     ) {}
 
-    async create(municipio: Municipio): Promise<Municipio> {
+    async create(Payload: createMunicipioDto): Promise<Municipio> {
         try {
+            const municipio = await this.municipioRepository.create(Payload)
             return await this.municipioRepository.save(municipio);
         } catch (error) {
             Utilities.catchError (error)
@@ -30,27 +32,41 @@ export class MunicipioService {
 
     async findAll(): Promise<Municipio[]> {
         try {
-            return await this.municipioRepository.find();
+
+            const municipio = await this.municipioRepository.find();
+            return municipio; 
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
-    async update(id: number, updateMunicipioDTO: Partial<Municipio>): Promise<Municipio> {
+    async update(id: number, payload: Partial<Municipio>): Promise<Municipio> {
         try {
-            const municipio = await this.municipioRepository.preload({
-                id,
-                ...updateMunicipioDTO,
+            const municipio = await this.municipioRepository.findOne({
+                where: { id }
             });
+
+            Object.assign(municipio, payload);
+
+            municipio.update_at = new Date ();
+            municipio.user_create_id;
+
             return await this.municipioRepository.save(municipio);
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
-    async delete(id: number): Promise<void> {
+    async delete(id: number, userId: number): Promise<Municipio> {
         try {
-            const result = await this.municipioRepository.delete(id);
+            const municipio = await this.municipioRepository.findOne({ 
+                where: {id} 
+            });
+
+            municipio.deleted_at = new Date()
+            municipio.deleted_at_id = userId;
+
+            return await this.municipioRepository.save(municipio)
         } catch (error) {
             Utilities.catchError (error)
         }

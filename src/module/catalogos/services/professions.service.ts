@@ -21,14 +21,16 @@ export class ProfessionsService {
     }
   }
 
-  async getProfessions() {
-    try {
-      const profession = await this.ProfessionsRepo.find();
-      return profession;
-    } catch (error) {
-      Utilities.catchError(error);
-    }
-  }
+      async getProfessions(): Promise<ProfessionsEntity[]>{
+        try{
+          const profession = await this.ProfessionsRepo.find();
+          return profession;
+        }catch(error){
+          Utilities.catchError(error)
+        }
+        
+      }
+      
 
   async getProfessionsById(id: number): Promise<ProfessionsEntity> {
     try {

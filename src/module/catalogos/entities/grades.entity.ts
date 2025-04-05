@@ -13,7 +13,6 @@ export class GradesEntity{
     @Column({
         name: 'grades',
         type: 'varchar',
-        length:100
     })
     grades:string
 

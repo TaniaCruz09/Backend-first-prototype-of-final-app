@@ -21,16 +21,14 @@ export class Turno {
   })
   id: number;
 
-  @Column({
-    name: 'turno',
-    type: 'varchar',
-    // nullable: false,
-    length: 50,
-  })
-  turno: string;
 
-  @OneToMany(() => Grupos, (grupos) => grupos.turno)
-  grupos?: Grupos[];
+    @Column({
+        name: 'turno',
+        type: 'varchar',
+        nullable: true,
+        //length: 50,
+    })
+    turno: string;
 
   //ID del usuario que creó el registro
   @Column({ name: 'user_create_id', type: 'int4', nullable: true }) // Nuevo campo
@@ -85,4 +83,7 @@ export class Turno {
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'deleted_at_id' }) // Se enlaza con el usuario que eliminó el registro
   user_delete: User;
+  
+  @OneToMany(() => Grupos, (grupos) => grupos.turno)
+  grupos?: Grupos[];
 }

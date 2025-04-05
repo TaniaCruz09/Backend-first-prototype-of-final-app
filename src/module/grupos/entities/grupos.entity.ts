@@ -25,6 +25,7 @@ export class Grupos {
   })
   id: number;
 
+<<<<<<< HEAD
   @ManyToOne(() => GradesEntity, (grado) => grado.grupos)
   grado: GradesEntity;
 
@@ -51,6 +52,10 @@ export class Grupos {
     (organizacionEscolar) => organizacionEscolar.grupo,
   )
   organizacionEscolar: OrganizacionEscolar;
+=======
+  @Column({ name: 'anio_lectivo', type: 'int2' })
+  anio_lectivo: number;
+>>>>>>> 0b282571a4b1ff4464ee1cd564b4a82d5c9183df
 
   //ID del usuario que creó el registro
   @Column({ name: 'user_create_id', type: 'int4', nullable: true }) // Nuevo campo
@@ -93,6 +98,27 @@ export class Grupos {
   // ID del usuario que elimino el registro
   @Column({ name: 'deleted_at_id', type: 'int4', nullable: true })
   deleted_at_id: number;
+
+  @ManyToOne(() => GradesEntity, (grado) => grado.grupos)
+  grado: GradesEntity;
+
+  @ManyToOne(() => Seccion, (seccion) => seccion.grupos)
+  seccion: Seccion;
+
+  @ManyToOne(() => Modalidad, (modalidad) => modalidad.grupos)
+  modalidad: Modalidad;
+
+  @ManyToOne(() => Turno, (turno) => turno.grupos)
+  turno: Turno;
+
+  @ManyToOne(() => Docentes, (docente) => docente.grupos)
+  docente: Docentes;
+
+  @OneToMany(
+    () => GruposConEstudiantes,
+    (grupoConEstudiantes) => grupoConEstudiantes.grupo,
+  )
+  grupoConEstudiantes?: GruposConEstudiantes;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'user_create_id' }) // Se enlaza con el usuario que creó el registro

@@ -20,9 +20,9 @@ export class Pais {
   })
   pais: string;
 
-  // @OneToMany(()=> Docentes, (docente)=> docente.pais)
-  // docente?: Docentes;
+  @OneToMany(() => Docentes, (docente) => docente.pais)
+  docente?: Docentes;
 
-  // @OneToMany(()=> StudentEntity, (student)=> student.pais)
-  // student?: StudentEntity;
+  @OneToMany(() => StudentEntity, (student) => student.pais)
+  student?: StudentEntity;
 }

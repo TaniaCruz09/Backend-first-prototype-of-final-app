@@ -36,6 +36,7 @@ export class Docentes {
     name: 'nombres',
     type: 'varchar',
     length: 100,
+    nullable: true,
   })
   nombres: string;
 
@@ -43,6 +44,7 @@ export class Docentes {
     name: 'apellido_paterno',
     type: 'varchar',
     length: 50,
+    nullable: true,
   })
   apellido_paterno: string;
 
@@ -50,6 +52,7 @@ export class Docentes {
     name: 'apellido_materno',
     type: 'varchar',
     length: 50,
+    nullable: true,
   })
   apellido_materno: string;
 
@@ -57,44 +60,49 @@ export class Docentes {
     name: 'cedula_identidad',
     type: 'varchar',
     length: 16,
+    nullable: true,
   })
   cedula_identidad: string;
 
   @Column({
     name: 'telefono',
-    type: "varchar",
-    nullable: true
+    type: 'varchar',
+    nullable: true,
   })
   telefono: string;
 
   @Column({
     name: 'fecha_nacimiento',
     type: 'date',
+    nullable: true,
   })
-  fecha_nacimiento: Date
+  fecha_nacimiento: Date;
 
   @Column({
     name: 'direccion_domiciliar',
     type: 'varchar',
+    nullable: true,
   })
   direccion_domiciliar: string;
 
   @Column({
     name: 'fechaContratado',
     type: 'date',
+    nullable: true,
   })
   fechaContratado: Date;
 
   @Column({
     name: 'nombre_contacto_emergencia',
     type: 'varchar',
+    nullable: true,
   })
   nombre_contacto_emergencia: string;
 
   @Column({
     name: 'telefono_contacto_emergencia',
     type: 'varchar',
-    nullable: true
+    nullable: true,
   })
   telefono_contacto_emergencia: string;
 
@@ -155,7 +163,6 @@ export class Docentes {
   @JoinColumn({ name: 'profesion_id' })
   profesion: ProfessionsEntity[];
 
-
   @ManyToOne(() => Pais, (pais) => pais.docente)
   @JoinColumn({ name: 'pais_id' })
   pais: Pais;
@@ -183,5 +190,4 @@ export class Docentes {
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'deleted_at_id' }) // Se enlaza con el usuario que eliminó el registro
   user_delete: User;
-
 }

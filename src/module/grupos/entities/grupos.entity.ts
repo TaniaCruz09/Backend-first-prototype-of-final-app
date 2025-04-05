@@ -4,6 +4,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -13,7 +14,8 @@ import { GradesEntity, Modalidad, Seccion, Turno } from '../../catalogos';
 import { Docentes } from '../../docentes/docentes.entity';
 import { GruposConEstudiantes } from './gruposConEstudiantes.entity';
 import { User } from '../../../module/auth/entities';
-import moment from 'moment';
+import * as moment from 'moment-timezone';
+import { OrganizacionEscolar } from './organizacionEscolar.entity.';
 
 @Entity({ name: 'grupos' })
 export class Grupos {
@@ -22,9 +24,6 @@ export class Grupos {
     type: 'int2',
   })
   id: number;
-
-  @Column({ name: 'anio_lectivo', type: 'int2' })
-  anio_lectivo: number;
 
   @ManyToOne(() => GradesEntity, (grado) => grado.grupos)
   grado: GradesEntity;
@@ -41,11 +40,17 @@ export class Grupos {
   @ManyToOne(() => Docentes, (docente) => docente.grupos)
   docente: Docentes;
 
-  @OneToMany(
+  @ManyToMany(
     () => GruposConEstudiantes,
     (grupoConEstudiantes) => grupoConEstudiantes.grupo,
   )
   grupoConEstudiantes?: GruposConEstudiantes;
+
+  @ManyToOne(
+    () => OrganizacionEscolar,
+    (organizacionEscolar) => organizacionEscolar.grupo,
+  )
+  organizacionEscolar: OrganizacionEscolar;
 
   //ID del usuario que creó el registro
   @Column({ name: 'user_create_id', type: 'int4', nullable: true }) // Nuevo campo

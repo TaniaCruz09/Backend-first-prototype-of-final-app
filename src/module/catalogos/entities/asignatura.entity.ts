@@ -1,15 +1,21 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { GruposConEstudiantes } from 'src/module/grupos/entities/gruposConEstudiantes.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ schema: 'catalogos', name: 'asignatura' })
 export class Asignatura {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column(
-        {
-            type: 'varchar',
-            length: 50,
-            name: 'asignatura',
-        })
-    asignatura: string
+  @Column({
+    type: 'varchar',
+    length: 50,
+    name: 'asignatura',
+  })
+  asignatura: string;
+
+  @ManyToOne(
+    () => GruposConEstudiantes,
+    (gruposConEstudiante) => gruposConEstudiante.asignatura,
+  )
+  gruposConEstudiante?: GruposConEstudiantes;
 }

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment-timezone';
 import { Grupos } from '../../../module/grupos/entities/grupos.entity';
 import {
   Column,

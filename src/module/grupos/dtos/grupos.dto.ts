@@ -13,9 +13,6 @@ export class CreateGrupoDto {
   @IsNumber()
   readonly id?: number;
 
-  @IsNumber()
-  anio_lectivo: number;
-
   @IsNotEmpty()
   @IsObject()
   grado: GradesEntity;

@@ -5,13 +5,16 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Grupos } from './grupos.entity';
 import { User } from '../../../module/auth/entities';
-import moment from 'moment';
+import * as moment from 'moment-timezone';
+import { Asignatura } from 'src/module/catalogos';
 
 @Entity({ name: 'gruposConEstudiantes' })
 export class GruposConEstudiantes {
@@ -21,14 +24,17 @@ export class GruposConEstudiantes {
   })
   id: number;
 
-  @ManyToOne(() => Grupos, (grupo) => grupo.grupoConEstudiantes)
+  @ManyToMany(() => Grupos, (grupo) => grupo.grupoConEstudiantes)
   grupo: Grupos;
 
-  @ManyToOne(
+  @OneToMany(
     () => StudentEntity,
     (estudiante) => estudiante.grupoConEstudiantes,
   )
   estudiante: StudentEntity;
+
+  @OneToMany(() => Asignatura, (asignatura) => asignatura.gruposConEstudiante)
+  asignatura: Asignatura;
 
   //ID del usuario que creó el registro
   @Column({ name: 'user_create_id', type: 'int4', nullable: true }) // Nuevo campo

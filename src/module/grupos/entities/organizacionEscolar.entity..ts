@@ -1,5 +1,3 @@
-import { Grupos } from '../../../module/grupos/entities/grupos.entity';
-import { User } from '../../../module/auth/entities';
 import {
   Column,
   CreateDateColumn,
@@ -11,26 +9,20 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Grupos } from './grupos.entity';
+import { User } from '../../../module/auth/entities';
 import * as moment from 'moment-timezone';
 
-@Entity({ schema: 'catalogos', name: 'seccion' })
-export class Seccion {
-  @PrimaryGeneratedColumn({
-    name: 'id',
-    type: 'int4',
-  })
+@Entity({ name: 'organizacionEscolar' })
+export class OrganizacionEscolar {
+  @PrimaryGeneratedColumn({ name: 'id', type: 'int2' })
   id: number;
 
-  @Column({
-    name: 'seccion',
-    type: 'varchar',
-    nullable: false,
-    length: 50,
-  })
-  seccion: string;
+  @Column({ name: 'anio_lectivo', type: 'int2' })
+  anio_lectivo: number;
 
-  @OneToMany(() => Grupos, (grupo) => grupo.seccion)
-  grupos?: Grupos[];
+  @OneToMany(() => Grupos, (grupo) => grupo.organizacionEscolar)
+  grupo?: Grupos[];
 
   //ID del usuario que creó el registro
   @Column({ name: 'user_create_id', type: 'int4', nullable: true }) // Nuevo campo

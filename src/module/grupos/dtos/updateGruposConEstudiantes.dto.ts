@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { Grupos } from '../entities/grupos.entity';
 import { StudentEntity } from '../../createEstudents';
+import { Asignatura } from 'src/module/catalogos';
 
 export class UpdateGrupoConEstudiantesDto {
   @IsOptional()
@@ -20,6 +21,10 @@ export class UpdateGrupoConEstudiantesDto {
   @IsOptional()
   @IsObject()
   estudiante?: StudentEntity;
+
+  @IsNotEmpty()
+  @IsObject()
+  asignatura?: Asignatura;
 
   @IsOptional()
   @IsNumber()

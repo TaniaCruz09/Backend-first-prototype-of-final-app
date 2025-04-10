@@ -22,7 +22,7 @@ import {
 } from '../catalogos';
 import { Grupos } from '../grupos/entities/grupos.entity';
 import { User } from '../../module/auth/entities';
-import moment from 'moment';
+import * as moment from 'moment-timezone';
 
 @Entity({ name: 'docentes' })
 export class Docentes {

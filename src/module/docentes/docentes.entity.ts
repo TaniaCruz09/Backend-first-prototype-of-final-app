@@ -62,8 +62,8 @@ export class Docentes {
 
   @Column({
     name: 'telefono',
-    type: "varchar",
-    nullable: true
+    type: 'varchar',
+    nullable: true,
   })
   telefono: string;
 
@@ -71,7 +71,7 @@ export class Docentes {
     name: 'fecha_nacimiento',
     type: 'date',
   })
-  fecha_nacimiento: Date
+  fecha_nacimiento: Date;
 
   @Column({
     name: 'direccion_domiciliar',
@@ -94,7 +94,7 @@ export class Docentes {
   @Column({
     name: 'telefono_contacto_emergencia',
     type: 'varchar',
-    nullable: true
+    nullable: true,
   })
   telefono_contacto_emergencia: string;
 
@@ -155,14 +155,13 @@ export class Docentes {
   @JoinColumn({ name: 'profesion_id' })
   profesion: ProfessionsEntity[];
 
-
   @ManyToOne(() => Pais, (pais) => pais.docente)
   @JoinColumn({ name: 'pais_id' })
   pais: Pais;
 
-  @ManyToOne(() => Departamento, (departamento) => departamento.docente)
-  @JoinColumn({ name: 'departamente_id' })
-  departamento: Departamento;
+  // @ManyToOne(() => Departamento, (departamento) => departamento.docente)
+  // @JoinColumn({ name: 'departamente_id' })
+  // departamento: Departamento;
 
   @ManyToOne(() => Municipio, (municipio) => municipio.docente)
   @JoinColumn({ name: 'municipio_id' })
@@ -183,5 +182,4 @@ export class Docentes {
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'deleted_at_id' }) // Se enlaza con el usuario que eliminó el registro
   user_delete: User;
-
 }

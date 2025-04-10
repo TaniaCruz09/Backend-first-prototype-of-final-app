@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { createQueryBuilder, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { StudentEntity } from "./students.entity";
@@ -7,13 +7,13 @@ import { Utilities } from "../../common/helpers/utilities";
 
 
 @Injectable()
-export class StudentService{
+export class StudentService {
     constructor(
         @InjectRepository(StudentEntity)
         private readonly StudentRepo: Repository<StudentEntity>,
-    ){}
+    ) { }
 
-    async created(payload: StudentsDto):Promise<StudentEntity>{ 
+    async created(payload: StudentsDto): Promise<StudentEntity> {
         try {
             const student = await this.StudentRepo.create(payload);
             return await this.StudentRepo.save(student);
@@ -22,38 +22,42 @@ export class StudentService{
         }
 
     }
-    async getStudent():Promise<StudentEntity[]>{
+    async getStudent(): Promise<StudentEntity[]> {
         try {
             return await this.StudentRepo.find({
-                relations: ['pais','gender','departamento','municipio']    
+                relations: ['pais', 'gender', 'departamento', 'municipio']
             });
         } catch (error) {
             Utilities.catchError(error)
         }
     }
 
-    async getStudentById(id: number): Promise <StudentEntity> {
+    async getStudentById(id: number): Promise<StudentEntity> {
         try {
-            const student = await this.StudentRepo.findOne({
-                where: {id},
-                relations: ['pais','gender','departamento','municipio']  
-            });
+            const student = await this.StudentRepo
+            .createQueryBuilder('student')
+            .leftJoinAndSelect('student.pais','pais')
+            .leftJoinAndSelect('student.gender','gender')
+            .leftJoinAndSelect('student.departamento','departamento')
+            .leftJoinAndSelect('student.municipio','municipio')
+            .where('student.id = :id', { id })
+            .getOne()
             return student;
         } catch (error) {
             Utilities.catchError(error)
         }
     }
 
-    async updateStudent(id:number, payload: StudentsDto): Promise <StudentEntity> {
+    async updateStudent(id: number, payload: StudentsDto): Promise<StudentEntity> {
         try {
             const student = await this.StudentRepo.findOne({ where: { id } });
             if (!student) {
                 throw new NotFoundException("Profesión no encontrada");
             }
-    
+
             // Actualizar solo los campos enviados, conservando los valores previos
             Object.assign(student, payload);
-    
+
             // Asignar la fecha de actualización y el usuario que modifica
             student.update_at = new Date();
             student.user_update_id;
@@ -65,15 +69,15 @@ export class StudentService{
         }
     }
 
-    async deleteStudent(id: number,userId: number): Promise<StudentEntity> {
+    async deleteStudent(id: number, userId: number): Promise<StudentEntity> {
         try {
             const student = await this.StudentRepo.findOne({
-                where: { id } 
+                where: { id }
             })
             if (!student) {
                 throw new NotFoundException("Profesión no encontrada");
             }
-    
+
             // Registrar el usuario que eliminó y la fecha de eliminación
             student.deleted_at = new Date();
             student.deleted_at_id = userId;

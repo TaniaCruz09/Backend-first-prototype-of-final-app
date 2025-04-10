@@ -1,0 +1,12 @@
+{
+    "name": "@types/exceljs",
+    "version": "1.3.2",
+    "description": "Stub TypeScript definitions entry for exceljs, which provides its own types definitions",
+    "main": "",
+    "scripts": {},
+    "license": "MIT",
+    "dependencies": {
+        "exceljs": "*"
+    },
+    "deprecated": "This is a stub types definition. exceljs provides its own type definitions, so you do not need this installed."
+}

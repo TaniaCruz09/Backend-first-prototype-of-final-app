@@ -1,0 +1,32 @@
+import { AcademicLevelEntity, Departamento, GenderEntity, Municipio, Pais, ProfessionsEntity } from '../catalogos';
+import { Grupos } from '../grupos/entities/grupos.entity';
+import { User } from '../../module/auth/entities';
+export declare class Docentes {
+    id: number;
+    nombres: string;
+    apellido_paterno: string;
+    apellido_materno: string;
+    cedula_identidad: string;
+    telefono: string;
+    fecha_nacimiento: Date;
+    direccion_domiciliar: string;
+    fechaContratado: Date;
+    nombre_contacto_emergencia: string;
+    telefono_contacto_emergencia: string;
+    update_at: Date;
+    created_at: Date;
+    user_create_id: number;
+    user_update_id: number;
+    deleted_at: Date;
+    deleted_at_id: number;
+    sexo: GenderEntity;
+    nivel_academico: AcademicLevelEntity[];
+    profesion: ProfessionsEntity[];
+    pais: Pais;
+    departamento: Departamento;
+    municipio: Municipio;
+    grupos?: Grupos[];
+    user_create: User;
+    user_update: User;
+    user_delete: User;
+}

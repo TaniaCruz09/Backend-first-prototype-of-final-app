@@ -1,29 +1,32 @@
 import {
   IsDate,
+  IsNotEmpty,
   IsNumber,
   IsObject,
   IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
-import { Cortes } from '../entities/corte.entity';
+import { SemestreEntity } from '../entities/semestres.entity';
 
-export class SemestreDto {
-  @IsNumber()
+export class createCortesDto {
   @IsOptional()
-  readonly id: number;
+  @IsNumber()
+  id?: number;
 
+  @IsNotEmpty()
   @IsString()
-  @MaxLength(30)
+  // @MaxLength(30)
   abreviatura: string;
 
+  @IsNotEmpty()
   @IsString()
-  @MaxLength(30)
-  semestre: string;
+  // @MaxLength(30)
+  corte: string;
 
   @IsObject()
-  @IsOptional()
-  corte?: Cortes;
+  @IsNotEmpty()
+  semestre: SemestreEntity;
 
   @IsOptional()
   @IsNumber()
@@ -31,11 +34,15 @@ export class SemestreDto {
 
   @IsOptional()
   @IsDate()
-  created_at: Date;
+  create_at: Date;
 
   @IsOptional()
   @IsDate()
   update_at: Date;
+
+  @IsOptional()
+  @IsNumber()
+  user_id: number;
 
   @IsOptional()
   @IsNumber()
@@ -44,8 +51,4 @@ export class SemestreDto {
   @IsOptional()
   @IsDate()
   deleted_at: Date;
-
-  @IsOptional()
-  @IsNumber()
-  deleted_at_id: number;
 }

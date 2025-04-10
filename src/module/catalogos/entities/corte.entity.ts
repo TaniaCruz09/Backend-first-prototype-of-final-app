@@ -1,5 +1,3 @@
-import { StudentEntity } from '../../createEstudents';
-import { Docentes } from '../../docentes/docentes.entity';
 import {
   Column,
   CreateDateColumn,
@@ -12,30 +10,31 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Centro } from '../../centroEducativo/entities/centro.entity';
 import * as moment from 'moment-timezone';
-import { User } from '../../auth/entities';
+import { User } from '../../../module/auth/entities';
+import { SemestreEntity } from './semestres.entity';
 
-@Entity({ schema: 'catalogos', name: 'departamento' })
-export class Departamento {
+@Entity({ schema: 'catalogos', name: 'cortes' })
+export class Cortes {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column({
     type: 'varchar',
-    length: 100,
-    name: 'departamento',
+    length: 30,
+    name: 'abreviatura',
   })
-  departamento: string;
+  abreviatura: string;
 
-  // @OneToMany(()=> Docentes, (docente)=> docente.departamento)
-  // docente?: Docentes;
+  @Column({
+    type: 'varchar',
+    length: 30,
+    name: 'corte',
+  })
+  corte: string;
 
-  @OneToMany(() => StudentEntity, (student) => student.departamento)
-  student?: StudentEntity;
-
-  @OneToMany(() => Centro, (centro) => centro.departamento)
-  centro?: Centro;
+  @ManyToOne(() => SemestreEntity, (semestre) => semestre.corte)
+  semestre: SemestreEntity;
 
   // ID del Usuario que creo el registro
   @Column({ name: 'user_create_id', type: 'int4', nullable: true })
@@ -52,7 +51,7 @@ export class Departamento {
         moment(value).tz('America/Managua').format('YYYY-MM-DD hh:mm A'), // Formatea a hora de Nicaragua
     },
   })
-  created_at: Date;
+  create_at: Date;
 
   //Fecha y Hora de la ultima actualizacion del registro
   @UpdateDateColumn({
@@ -69,15 +68,15 @@ export class Departamento {
 
   //ID del Usuario que realizo la ultima actualización
   @Column({ name: 'user_update_id', type: 'int4', nullable: true })
-  user_update_id: number;
+  user_updated_id: number;
 
   //Fecha y Hora en el que el registro fue eliminado
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
-  deleted_at: Date;
+  delete_at: Date;
 
   //ID del Usuario que elimino el registro
   @Column({ name: 'deleted_at_id', type: 'int4', nullable: true })
-  deleted_at_id: number;
+  delete_at_id: number;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'user_create_id' }) // Se enlaza con el usuario que creó el registro

@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe, UseGuards, Req } from '@nestjs/common';
 import { MunicipioService } from '../services/municipio.service';
 import { createMunicipioDto } from '../dtos/municipio.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Utilities } from '../../../common/helpers/utilities';
+import { JwtAuthGuard } from '../../../module/auth/guards/jwt.guard';
 
     @ApiTags('municipio')
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Controller('municipio')
     export class MunicipioController {
     constructor(private readonly municipioService: MunicipioService) {}
@@ -38,12 +40,25 @@ import { Utilities } from '../../../common/helpers/utilities';
         }
     }
 
+    //aqui
     @Post('/')
-    async create(@Body() payload: createMunicipioDto){
+    async create(@Body() payload: createMunicipioDto, @Req() req){
         try {
-            const municipio = await this.municipioService.create(payload);
+
+            const userId = req.user?.id;
+
+            if (!userId) {
+                return {
+                    message: "Usuario no encontrado",
+                    statusCode: 401
+                };
+            }
+
+            payload.user_create_id = userId;
+
+            const newMunicipio = await this.municipioService.create(payload);
             const data = {
-            data: municipio,
+            data: newMunicipio,
             message: 'Municipio creado correctamente',
             };
             return data;
@@ -56,30 +71,50 @@ import { Utilities } from '../../../common/helpers/utilities';
     async update(
         @Param('id', ParseIntPipe) id: number, 
         @Body() payload: createMunicipioDto,
+        @Req() req
     ){
         try {
+            const userId = req.user?.id;
+            if (!userId) {
+                return {
+                    message: "Usuario no encontrado",
+                    statusCode: 401
+                };
+            } 
+
+            payload.user_create_id = userId;
+
             const municipio = await this.municipioService.update(id, payload);
-            const data = {
-            data: municipio,
-            message: 'Municipio actualizado correctamente',
+            return {
+                data: municipio,
+                message: 'Municipio actualizado correctamente',
             };
-            return data;
+    } catch (error) {
+        Utilities.catchError (error);
+    }
+}
+
+    @Delete('/:id')
+    async delete(
+        @Param('id', ParseIntPipe) id: number,
+        @Req() req
+    ) {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                return {
+                    message: "Usuario no autenticado",
+                    statusCode: 401
+                };
+            }
+            const municipio = await this.municipioService.delete(id, userId);
+            return {
+                data: municipio,
+                message: 'Municipio eliminado correctamente',
+            }
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
-    @Delete('/:id')
-    async delete(@Param('id', ParseIntPipe) id: number) {
-        try {
-            const municipio = await this.municipioService.delete(id);
-            const data = {
-            data: municipio,
-            message: 'Municipio eliminado correctamente',
-            };
-            return data; 
-        } catch (error) {
-            Utilities.catchError (error)
-        }
-    }
     }

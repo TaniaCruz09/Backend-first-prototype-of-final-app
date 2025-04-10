@@ -4,16 +4,18 @@ import { Pais } from "../entities/pais.entity";
 import { Repository } from "typeorm";
 import { AcademicLevelEntity } from "..";
 import { Utilities } from "../../../common/helpers/utilities";
+import { createPaisDto } from "../dtos/pais.dto";
 
 @Injectable()
 export class PaisService {
     constructor(
         @InjectRepository(Pais)
-        private paisRepository: Repository<Pais>,
+        private readonly paisRepository: Repository<Pais>,
     ) {}
 
-    async createPais(pais: Pais): Promise<Pais> {
+    async createPais(payload: createPaisDto): Promise<Pais> {
         try {
+            const pais = await this.paisRepository.create(payload)
             return await this.paisRepository.save(pais);
         } catch (error) {
             Utilities.catchError (error)
@@ -31,30 +33,40 @@ export class PaisService {
 
     async findAll(): Promise<Pais[]> {
         try {
-            return await this.paisRepository.find();
+            const pais = await this.paisRepository.find();
+            return pais;
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
-    async update(id: number, updatePaisDTO: Partial<Pais>): Promise<Pais> {
+    async update(id: number, payload: Partial<Pais>): Promise<Pais> {
         try {
-            const pais = await this.paisRepository.preload({
-                id,
-                ...updatePaisDTO,
+            const pais = await this.paisRepository.findOne({
+                where: { id }
             });
+
+            Object.assign(pais, payload);
+
+            pais.update_at = new Date();
+            pais.user_update_id;
+
             return await this.paisRepository.save(pais);
         } catch (error) {
             Utilities.catchError (error)
         }
     }
 
-    async delete(id: number): Promise<Pais> {
+    async delete(id: number, userId: number): Promise<Pais> {
         try {
-            const result = await this.paisRepository.findOne({
-                where: {id: id}
-            })
-            return await this.paisRepository.remove(result)
+            const pais = await this.paisRepository.findOne({
+                where: { id }
+            });
+
+            pais.deleted_at = new Date()
+            pais.deleted_at_id = userId;
+
+            return await this.paisRepository.save(pais)
         } catch (error) {
             Utilities.catchError (error)
         }

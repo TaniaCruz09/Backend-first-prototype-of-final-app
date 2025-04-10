@@ -167,9 +167,9 @@ export class Docentes {
   @JoinColumn({ name: 'pais_id' })
   pais: Pais;
 
-  @ManyToOne(() => Departamento, (departamento) => departamento.docente)
-  @JoinColumn({ name: 'departamente_id' })
-  departamento: Departamento;
+  // @ManyToOne(() => Departamento, (departamento) => departamento.docente)
+  // @JoinColumn({ name: 'departamente_id' })
+  // departamento: Departamento;
 
   @ManyToOne(() => Municipio, (municipio) => municipio.docente)
   @JoinColumn({ name: 'municipio_id' })

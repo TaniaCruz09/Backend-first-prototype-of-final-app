@@ -53,4 +53,6 @@ export class UpdateCentroDto {
     @IsOptional()
     @IsNumber()
     deleted_at_id?: number;
+
+    
 } 

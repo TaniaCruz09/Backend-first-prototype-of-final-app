@@ -11,7 +11,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import moment from 'moment';
+import * as moment from 'moment-timezone';
 
 @Entity({ schema: 'catalogos', name: 'turno' })
 export class Turno {

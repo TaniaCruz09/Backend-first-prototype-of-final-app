@@ -5,13 +5,16 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Grupos } from './grupos.entity';
 import { User } from '../../../module/auth/entities';
-import moment from 'moment';
+import * as moment from 'moment-timezone';
+import { Asignatura } from 'src/module/catalogos';
 
 @Entity({ name: 'gruposConEstudiantes' })
 export class GruposConEstudiantes {
@@ -20,6 +23,18 @@ export class GruposConEstudiantes {
     type: 'int2',
   })
   id: number;
+
+  @ManyToMany(() => Grupos, (grupo) => grupo.grupoConEstudiantes)
+  grupo: Grupos;
+
+  @OneToMany(
+    () => StudentEntity,
+    (estudiante) => estudiante.grupoConEstudiantes,
+  )
+  estudiante: StudentEntity;
+
+  @OneToMany(() => Asignatura, (asignatura) => asignatura.gruposConEstudiante)
+  asignatura: Asignatura;
 
   //ID del usuario que creó el registro
   @Column({ name: 'user_create_id', type: 'int4', nullable: true }) // Nuevo campo
@@ -62,15 +77,6 @@ export class GruposConEstudiantes {
   // ID del usuario que elimino el registro
   @Column({ name: 'deleted_at_id', type: 'int4', nullable: true })
   deleted_at_id: number;
-
-  @ManyToOne(() => Grupos, (grupo) => grupo.grupoConEstudiantes)
-  grupo: Grupos;
-
-  @ManyToOne(
-    () => StudentEntity,
-    (estudiante) => estudiante.grupoConEstudiantes,
-  )
-  estudiante: StudentEntity;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'user_create_id' }) // Se enlaza con el usuario que creó el registro

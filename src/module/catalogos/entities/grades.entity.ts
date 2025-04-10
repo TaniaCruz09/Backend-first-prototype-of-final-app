@@ -1,10 +1,7 @@
 import { Grupos } from '../../../module/grupos/entities/grupos.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({
-  schema: 'catalogos',
-  name: 'grades',
-})
+@Entity({ schema: 'catalogos', name: 'grades' })
 export class GradesEntity {
   @PrimaryGeneratedColumn({
     name: 'id',
@@ -15,6 +12,8 @@ export class GradesEntity {
   @Column({
     name: 'grades',
     type: 'varchar',
+
+    nullable: true,
   })
   grades: string;
 

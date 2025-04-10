@@ -13,9 +13,6 @@ export class UpdateGrupoDto {
   @IsNumber()
   readonly id?: number;
 
-  @IsNumber()
-  anio_lectivo?: number;
-
   @IsOptional()
   @IsObject()
   grado?: GradesEntity;

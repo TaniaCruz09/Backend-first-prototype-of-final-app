@@ -4,6 +4,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -13,7 +14,8 @@ import { GradesEntity, Modalidad, Seccion, Turno } from '../../catalogos';
 import { Docentes } from '../../docentes/docentes.entity';
 import { GruposConEstudiantes } from './gruposConEstudiantes.entity';
 import { User } from '../../../module/auth/entities';
-import moment from 'moment';
+import * as moment from 'moment-timezone';
+import { OrganizacionEscolar } from './organizacionEscolar.entity.';
 
 @Entity({ name: 'grupos' })
 export class Grupos {
@@ -23,7 +25,34 @@ export class Grupos {
   })
   id: number;
 
-  @Column({ name: 'anio_lectivo', type: 'int2' })
+  @ManyToOne(() => GradesEntity, (grado) => grado.grupos)
+  grado: GradesEntity;
+
+  @ManyToOne(() => Seccion, (seccion) => seccion.grupos)
+  seccion: Seccion;
+
+  @ManyToOne(() => Modalidad, (modalidad) => modalidad.grupos)
+  modalidad: Modalidad;
+
+  @ManyToOne(() => Turno, (turno) => turno.grupos)
+  turno: Turno;
+
+  @ManyToOne(() => Docentes, (docente) => docente.grupos)
+  docente: Docentes;
+
+  @ManyToMany(
+    () => GruposConEstudiantes,
+    (grupoConEstudiantes) => grupoConEstudiantes.grupo,
+  )
+  grupoConEstudiantes?: GruposConEstudiantes;
+
+  @ManyToOne(
+    () => OrganizacionEscolar,
+    (organizacionEscolar) => organizacionEscolar.grupo,
+  )
+  organizacionEscolar: OrganizacionEscolar;
+
+  @Column({ name: 'anio_lectivo', type: 'int2', nullable: true })
   anio_lectivo: number;
 
   //ID del usuario que creó el registro
@@ -67,27 +96,6 @@ export class Grupos {
   // ID del usuario que elimino el registro
   @Column({ name: 'deleted_at_id', type: 'int4', nullable: true })
   deleted_at_id: number;
-
-  @ManyToOne(() => GradesEntity, (grado) => grado.grupos)
-  grado: GradesEntity;
-
-  @ManyToOne(() => Seccion, (seccion) => seccion.grupos)
-  seccion: Seccion;
-
-  @ManyToOne(() => Modalidad, (modalidad) => modalidad.grupos)
-  modalidad: Modalidad;
-
-  @ManyToOne(() => Turno, (turno) => turno.grupos)
-  turno: Turno;
-
-  @ManyToOne(() => Docentes, (docente) => docente.grupos)
-  docente: Docentes;
-
-  @OneToMany(
-    () => GruposConEstudiantes,
-    (grupoConEstudiantes) => grupoConEstudiantes.grupo,
-  )
-  grupoConEstudiantes?: GruposConEstudiantes;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'user_create_id' }) // Se enlaza con el usuario que creó el registro

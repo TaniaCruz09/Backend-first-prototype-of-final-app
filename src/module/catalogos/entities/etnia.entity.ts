@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment-timezone';
 import { User } from '../../../module/auth/entities';
 import {
   Column,

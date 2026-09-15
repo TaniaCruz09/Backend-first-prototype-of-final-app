@@ -1,9 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Role } from '../entities';
 import { RoleDto } from '../dtos/roles.dto';
 import { QueryParamsRolesDto } from '../dtos/query-params-roles.dto';
+import { normalizeRoleName } from '../enums';
 
 @Injectable()
 export class RolesService {
@@ -25,7 +26,7 @@ export class RolesService {
     
 
     if (query.role)
-      rows.andWhere('pepito.role ILIKE :role', { role: `%${query.role}%` });
+      rows.andWhere('pepito.rol ILIKE :role', { role: `%${query.role}%` });
 
     if (query.is_active === 'true')
       rows.andWhere('pepito.is_active = :is_active', {
@@ -43,9 +44,10 @@ export class RolesService {
   }
 
   async createRole(payload: RoleDto): Promise<Role> {
-    const rolName = payload.rol?.trim();
+    // Normaliza el nombre: 'admin'/'ADMIN' -> 'Admin'; 'docente' -> 'Docente'
+    const rolName = normalizeRoleName(payload.rol);
     const existing = await this.roleRepo.findOne({
-      where: { rol: rolName },
+      where: { rol: ILike(rolName) },
       withDeleted: true,
     });
 
@@ -78,10 +80,10 @@ export class RolesService {
       throw new NotFoundException("Role doesn't exist");
     }
 
-    const rolName = payload.rol?.trim();
+    const rolName = payload.rol ? normalizeRoleName(payload.rol) : undefined;
     if (rolName) {
       const duplicate = await this.roleRepo.findOne({
-        where: { rol: rolName },
+        where: { rol: ILike(rolName) },
         withDeleted: true,
       });
 

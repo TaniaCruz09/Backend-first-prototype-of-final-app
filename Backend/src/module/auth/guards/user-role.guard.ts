@@ -9,6 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { User } from '../entities/user.entity';
 import { META_ROLES } from '../decorators/role.decorator';
+import { roleMatches } from '../enums';
 
 @Injectable()
 export class UserRoleGuard implements CanActivate {
@@ -31,7 +32,7 @@ export class UserRoleGuard implements CanActivate {
     if (!user) throw new BadRequestException('User not found');
 
     for (const role of user.roles) {
-      if (validRoles.includes(role.rol)) {
+      if (validRoles.some((validRole) => roleMatches(role.rol, validRole))) {
         return true;
       }
     }

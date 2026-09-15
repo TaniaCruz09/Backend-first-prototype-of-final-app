@@ -18,6 +18,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../services';
+import { normalizeRoleName, roleMatches } from '../enums';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -45,7 +46,8 @@ export class AuthController {
     try {
       const { user, token } = await this.authService.signIn(payload);
 
-      const roles = user.roles?.map((r: any) => r.rol) || [];
+      // Nombres de rol con capitalización canónica ('docente' -> 'Docente')
+      const roles = user.roles?.map((r: any) => normalizeRoleName(r.rol)).filter(Boolean) || [];
 
       // Caso 1: un solo rol → token definitivo
       if (roles.length === 1) {
@@ -102,18 +104,20 @@ export class AuthController {
       const user = await this.authService.findUserById(payload.sub);
       if (!user) throw new BadRequestException('Usuario no encontrado');
 
-      // Buscar el rol seleccionado dentro de sus roles
-      const selectedRole = user.roles.find((r) => r.rol === role);
+      // Buscar el rol seleccionado dentro de sus roles (sin importar mayúsculas/minúsculas)
+      const selectedRole = user.roles.find((r) => roleMatches(r.rol, role));
       if (!selectedRole) {
         throw new BadRequestException('El rol seleccionado no pertenece al usuario');
       }
+
+      const roleName = normalizeRoleName(selectedRole.rol);
 
       // Crear token completo con rol + datos extra
       const newToken = this.jwtService.sign({
         sub: user.id,
         name: user.name,
         email: user.email,
-        roles: [role],
+        roles: [roleName],
         docente: user.docente ? { id: user.docente.id, nombre: user.docente.nombres } : null,
       });
 
@@ -121,7 +125,7 @@ export class AuthController {
 
       return {
         message: 'Rol seleccionado correctamente',
-        role,
+        role: roleName,
         token: newToken,
         user: {
           id: user.id,
@@ -159,7 +163,7 @@ export class AuthController {
         sub: payload.sub,
         name: payload.name,
         email: payload.email,
-        roles: payload.roles,
+        roles: (payload.roles ?? []).map((r: string) => normalizeRoleName(r)),
         docente: payload.docente ?? null,
       });
 
@@ -183,7 +187,7 @@ export class AuthController {
           id: payload.sub,
           name: payload.name,
           email: payload.email,
-          roles: payload.roles,
+          roles: (payload.roles ?? []).map((r: string) => normalizeRoleName(r)),
         },
       };
     } catch {

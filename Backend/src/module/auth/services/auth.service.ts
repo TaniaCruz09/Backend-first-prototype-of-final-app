@@ -10,6 +10,7 @@ import { AuthDto } from '../dtos/auth.dto';
 
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from './users.service';
+import { normalizeRoleName } from '../enums';
 
 
 @Injectable()
@@ -33,15 +34,20 @@ export class AuthService {
         throw new UnauthorizedException('Credenciales inválidas');
       }
 
-      // Generar el token
-      const payloadJwt = { sub: user.id, name: user.name, email: user.name, roles: user.roles };
+      // Generar el token (roles con nombre canónico: 'docente' -> 'Docente')
+      const payloadJwt = {
+        sub: user.id,
+        name: user.name,
+        email: user.email,
+        roles: (user.roles ?? []).map((role) => normalizeRoleName(role.rol)),
+      };
       const token = await this.jwtService.signAsync(payloadJwt);
 
       // Limpiar el objeto user (remover token antes de devolverlo)
       const { token: __, ...cleanUser } = user;
 
       return { user: cleanUser, token };
-    } catch (error) {
+    } catch (error: any) {
       // Si el usuario no existe, atrapamos el NotFound y lo convertimos en 401
       if (error?.getStatus?.() === 404) {
         throw new UnauthorizedException('Usuario no encontrado');

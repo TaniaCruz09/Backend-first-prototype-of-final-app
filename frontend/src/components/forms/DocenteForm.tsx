@@ -21,6 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { User } from "lucide-react";
 import { feching } from "@/utils/cliente-http";
 import { useToast } from "@/hooks/use-toast";
+import SearchableSelect from "../ui/searchable-select";
 
 interface DocenteFormProps {
   defaultValues?: Docente | null;
@@ -478,34 +479,32 @@ export default function DocenteForm({
 
           <div>
             <label className="block text-gray-700 font-medium mb-1">Nivel académico</label>
-            <select
-              name="nivelAcademico"
+            <SearchableSelect
+              options={nivelesAcademicos.map((r) => ({
+                value: r.id.toString(),
+                label: r.academicLevel,
+              }))}
               value={formValues.nivelAcademico}
-              onChange={handleInputChange}
-              className="input-style"
-              required
-            >
-              <option value="">Seleccionar nivel</option>
-              {nivelesAcademicos.map((r) => (
-                <option key={r.id} value={r.id}>{r.academicLevel}</option>
-              ))}
-            </select>
+              onChange={(value) =>
+                setFormValues((prev) => ({ ...prev, nivelAcademico: value }))
+              }
+              placeholder="Buscar nivel académico..."
+            />
           </div>
 
           <div>
             <label className="block text-gray-700 font-medium mb-1">Profesión</label>
-            <select
-              name="profesiones"
+            <SearchableSelect
+              options={profesiones.map((r) => ({
+                value: r.id.toString(),
+                label: r.profession,
+              }))}
               value={formValues.profesiones}
-              onChange={handleInputChange}
-              className="input-style"
-              required
-            >
-              <option value="">Seleccionar profesión</option>
-              {profesiones.map((r) => (
-                <option key={r.id} value={r.id}>{r.profession}</option>
-              ))}
-            </select>
+              onChange={(value) =>
+                setFormValues((prev) => ({ ...prev, profesiones: value }))
+              }
+              placeholder="Buscar profesión..."
+            />
           </div>
 
           <div>
@@ -546,18 +545,17 @@ export default function DocenteForm({
 
           <div>
             <label className="block text-gray-700 font-medium mb-1">Municipio</label>
-            <select
-              name="municipio"
+            <SearchableSelect
+              options={municipios.map((r) => ({
+                value: r.id.toString(),
+                label: r.municipio,
+              }))}
               value={formValues.municipio}
-              onChange={handleInputChange}
-              className="input-style"
-              required
-            >
-              <option value="">Seleccionar municipio</option>
-              {municipios.map((r) => (
-                <option key={r.id} value={r.id}>{r.municipio}</option>
-              ))}
-            </select>
+              onChange={(value) =>
+                setFormValues((prev) => ({ ...prev, municipio: value }))
+              }
+              placeholder="Buscar municipio..."
+            />
           </div>
 
           <div>

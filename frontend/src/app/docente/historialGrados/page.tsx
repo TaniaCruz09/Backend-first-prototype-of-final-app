@@ -8,14 +8,21 @@ import { Input } from "@/components/ui/input"
 import { BookOpen, FileText, Search, ArrowLeft, Users, GraduationCap, ChevronLeft, ChevronRight } from "lucide-react"
 import { FaClockRotateLeft } from "react-icons/fa6"
 import { useAuth } from "@/hooks/useAuth"
-import { getDocenteById } from "@/actions/docentesMethods/docentesMethods"
+import { getDocenteById, getGradosByDocenteId } from "@/actions/docentesMethods/docentesMethods"
+import { getEsquelaByGrupo } from "@/actions/calificaciones/esquelasHeadsMethods/esquelasHeadMethods"
 import { GrupoEscolar } from "@/interfaces"
 import Header from "@/components/Header"
 import { useRouter } from "next/navigation"
 import { motion } from 'framer-motion'
 
+interface GrupoHistorial extends GrupoEscolar {
+  esGuia: boolean
+  esMateria: boolean
+  materias?: string
+}
+
 export default function HistorialGradosPage() {
-  const [grupos, setGrupos] = useState<GrupoEscolar[]>([])
+  const [grupos, setGrupos] = useState<GrupoHistorial[]>([])
   const [searchYear, setSearchYear] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const ITEMS_PER_PAGE = 6
@@ -24,66 +31,156 @@ export default function HistorialGradosPage() {
 
   useEffect(() => {
     if (!docente?.id) return;
-    const fetchDocente = async (docenteId: number) => {
+    const fetchHistorial = async (docenteId: number) => {
       try {
-        const res = await getDocenteById(docenteId)
-        if (!res || !res.id) throw new Error("Error al obtener datos del docente")
+        const [resGuia, resMaterias] = await Promise.all([
+          getDocenteById(docenteId),
+          getGradosByDocenteId(docenteId),
+        ])
 
-        const mappedClasses: GrupoEscolar[] = (res.grupos || [])
-          .filter((g: any) => g.organizacionEscolar !== null)
-          .map((g: any) => {
-            const relacionesEstudiantes = (g.grupoAsignaturaDocente || [])
-              .flatMap((rel: any) => rel?.gruposConEstudiantes || [])
+        const gruposMap = new Map<number, GrupoHistorial>()
+        const estudiantesPorGrupo = new Map<number, Set<number>>()
+        const materiasPorGrupo = new Map<number, Set<string>>()
 
-            const materiasUnicas = new Set(
-              (g.grupoAsignaturaDocente || [])
-                .map((rel: any) => rel?.asignatura?.id)
-                .filter((id: any) => Number.isFinite(Number(id)))
-            )
+        const agregarEstudiantes = (grupoId: number, relaciones: any[]) => {
+          if (!estudiantesPorGrupo.has(grupoId)) estudiantesPorGrupo.set(grupoId, new Set())
+          const acumulado = estudiantesPorGrupo.get(grupoId)!
 
-            const estudiantesUnicos = new Set(
-              relacionesEstudiantes
-                .map((relacion: any) => relacion?.estudiante?.id)
-                .filter((id: any) => Number.isFinite(Number(id)))
-            )
+          relaciones.forEach((rel: any) => {
+            (rel?.gruposConEstudiantes || []).forEach((item: any) => {
+              const id = Number(item?.estudiante?.id)
+              if (Number.isFinite(id)) acumulado.add(id)
+            })
+          })
+        }
 
-            return {
+        // 1️⃣ Grupos donde el docente imparte alguna materia (aunque no sea el guía)
+        const relaciones: any[] = Array.isArray(resMaterias?.grupoAsignaturaDocente)
+          ? resMaterias.grupoAsignaturaDocente
+          : []
+
+        relaciones.forEach((relacion: any) => {
+          const grupo = relacion?.grupo
+          if (!grupo || grupo.deleted_at) return
+
+          const grupoId = Number(grupo.id)
+
+          agregarEstudiantes(grupoId, [relacion])
+
+          if (!materiasPorGrupo.has(grupoId)) materiasPorGrupo.set(grupoId, new Set())
+          if (relacion?.asignatura?.asignatura) {
+            materiasPorGrupo.get(grupoId)!.add(relacion.asignatura.asignatura)
+          }
+
+          const existente = gruposMap.get(grupoId)
+          if (existente) {
+            existente.grupoAsignaturaDocente = [...(existente.grupoAsignaturaDocente || []), relacion]
+            existente.esMateria = true
+          } else {
+            gruposMap.set(grupoId, {
+              id: grupo.id,
+              grado: grupo.grado,
+              seccion: grupo.seccion,
+              numero_estudiantes: 0,
+              numero_estudiantes_inactivos: 0,
+              numero_materias: 0,
+              organizacionEscolar: grupo.organizacionEscolar,
+              docenteGuia: grupo.docenteGuia,
+              grupoAsignaturaDocente: [relacion],
+              esquelaHead: undefined,
+              esGuia: false,
+              esMateria: true,
+            })
+          }
+        })
+
+        // 2️⃣ Grupos donde el docente es guía (el backend ya trae la esquela)
+        const guiados: any[] = (resGuia?.grupos || []).filter((g: any) => g?.organizacionEscolar !== null)
+
+        guiados.forEach((g: any) => {
+          const grupoId = Number(g.id)
+          agregarEstudiantes(grupoId, g.grupoAsignaturaDocente || [])
+
+          const existente = gruposMap.get(grupoId)
+          if (existente) {
+            existente.esGuia = true
+            if (!existente.esquelaHead?.id && g.esquelaHead?.id) {
+              existente.esquelaHead = g.esquelaHead
+            }
+          } else {
+            gruposMap.set(grupoId, {
               id: g.id,
               grado: g.grado,
               seccion: g.seccion,
-              // turno ahora se obtiene desde organizacionEscolar
-              numero_estudiantes: estudiantesUnicos.size,
+              numero_estudiantes: 0,
               numero_estudiantes_inactivos: 0,
-              numero_materias: materiasUnicas.size,
+              numero_materias: 0,
               organizacionEscolar: g.organizacionEscolar,
               docenteGuia: g.docenteGuia,
-              grupoAsignaturaDocente: g.grupoAsignaturaDocente,
+              grupoAsignaturaDocente: g.grupoAsignaturaDocente || [],
               esquelaHead: g.esquelaHead,
-            }
-          })
+              esGuia: true,
+              esMateria: false,
+            })
+          }
+        })
 
-        setGrupos(mappedClasses)
+        // 3️⃣ Completar contadores, materias y esquela; quedarnos solo con años finalizados
+        const historial: GrupoHistorial[] = []
+
+        for (const grupo of gruposMap.values()) {
+          const grupoId = Number(grupo.id)
+
+          grupo.numero_estudiantes = estudiantesPorGrupo.get(grupoId)?.size || 0
+
+          const materiasImpartidas = Array.from(materiasPorGrupo.get(grupoId) || [])
+          grupo.materias = materiasImpartidas.join(', ')
+
+          const materiasDelGrupo = new Set(
+            (grupo.grupoAsignaturaDocente || [])
+              .map((rel: any) => rel?.asignatura?.id)
+              .filter((id: any) => Number.isFinite(Number(id)))
+          )
+          grupo.numero_materias = materiasDelGrupo.size || materiasImpartidas.length
+
+          if (!grupo.esquelaHead?.id) {
+            try {
+              const esquela = await getEsquelaByGrupo(grupoId)
+              if (esquela?.id) grupo.esquelaHead = esquela
+            } catch {
+              // sin esquela: el botón queda deshabilitado
+            }
+          }
+
+          if (grupo.organizacionEscolar && !grupo.organizacionEscolar.anio_lectivo?.isActive) {
+            historial.push(grupo)
+          }
+        }
+
+        historial.sort(
+          (a, b) =>
+            (b.organizacionEscolar?.anio_lectivo?.anio_lectivo ?? 0) -
+            (a.organizacionEscolar?.anio_lectivo?.anio_lectivo ?? 0)
+        )
+
+        setGrupos(historial)
       } catch (error) {
-        console.error("Error fetching docente:", error)
+        console.error("Error fetching historial del docente:", error)
       }
     }
 
     if (rol !== 'Docente') return
     if (docente?.id) {
-      fetchDocente(docente.id)
+      fetchHistorial(docente.id)
       return
     }
     const storedUserId = localStorage.getItem('userId')
     if (storedUserId) {
-      fetchDocente(Number(storedUserId))
+      fetchHistorial(Number(storedUserId))
     }
   }, [docente?.id, rol])
 
-  const gruposInactivos = grupos.filter(
-    (c) => !c.organizacionEscolar?.anio_lectivo?.isActive
-  )
-
-  const filteredHistoricalClasses = gruposInactivos.filter(
+  const filteredHistoricalClasses = grupos.filter(
     (g) =>
       searchYear === "" ||
       g.organizacionEscolar?.anio_lectivo?.anio_lectivo
@@ -126,7 +223,7 @@ export default function HistorialGradosPage() {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-gray-800">Historial de Grados</h2>
-              <p className="text-muted-foreground text-sm">Grados guía anteriores</p>
+              <p className="text-muted-foreground text-sm">Grupos anteriores: guía y materias impartidas</p>
             </div>
           </div>
         </div>
@@ -167,6 +264,18 @@ export default function HistorialGradosPage() {
                             {classData.grado?.grades ?? "Sin grado"} - Sección {classData.seccion.seccion} - {classData.organizacionEscolar?.turno?.turno}
                           </h3>
                           <p className="text-sm text-gray-500">{classData.organizacionEscolar?.turno?.modalidad?.modalidad ?? "Sin modalidad"}</p>
+                          <div className="flex flex-wrap items-center gap-1 mt-1">
+                            {classData.esGuia && (
+                              <span className="inline-block text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                                Docente guía
+                              </span>
+                            )}
+                            {classData.esMateria && (
+                              <span className="inline-block text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+                                Materias: {classData.materias || "—"}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <Badge className="bg-blue-50 text-blue-700 border-blue-200 text-xs px-3 py-1.5 font-medium shadow-sm">
@@ -189,8 +298,13 @@ export default function HistorialGradosPage() {
                     {/* Botón */}
                     <Button
                       size="default"
-                      className="w-full h-11 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all"
-                      onClick={() => router.push(`/esquela-calificaciones/${classData.esquelaHead?.id}`)}
+                      className="w-full h-11 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all disabled:opacity-50"
+                      disabled={!classData.esquelaHead?.id}
+                      onClick={() => {
+                        if (classData.esquelaHead?.id) {
+                          router.push(`/esquela-calificaciones/${classData.esquelaHead.id}`)
+                        }
+                      }}
                     >
                       <FileText className="w-4 h-4 mr-2" />
                       Ver Esquela
@@ -245,7 +359,7 @@ export default function HistorialGradosPage() {
                 {searchYear ? "No se encontraron resultados" : "No hay historial disponible"}
               </p>
               <p className="text-sm text-gray-400 mt-1">
-                {searchYear ? "Intenta con otro año de búsqueda" : "Aún no tienes grados guía anteriores"}
+                {searchYear ? "Intenta con otro año de búsqueda" : "Aún no tienes grupos en años finalizados"}
               </p>
             </CardContent>
           </Card>

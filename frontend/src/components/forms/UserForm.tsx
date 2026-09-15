@@ -35,6 +35,7 @@ const UserForm = ({ defaultValues, onSuccess }: UserFormProps) => {
   const [docente, setDocente] = useState<number | "">("");
   const [docentes, setDocentes] = useState<Docente[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isEdit = Boolean(defaultValues?.id);
 
@@ -111,6 +112,8 @@ const UserForm = ({ defaultValues, onSuccess }: UserFormProps) => {
       })
       return
     }
+
+    setIsSubmitting(true);
     try {
       const normalizedEmail = email.trim().toLowerCase();
       if (normalizedEmail) {
@@ -179,15 +182,18 @@ const UserForm = ({ defaultValues, onSuccess }: UserFormProps) => {
       onSuccess();
     } catch (err) {
       console.error("Error al guardar/actualizar el usuario:", err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-semibold text-gray-700 mb-4">
+    <form onSubmit={handleSubmit} className="flex flex-col min-h-[520px] py-6">
+      <h2 className="text-xl font-semibold text-gray-700 mb-6">
         {isEdit ? "Editar Usuario" : "Agregar Usuario"}
       </h2>
 
+      <div className="flex flex-1 flex-col justify-evenly gap-6">
       {/* Selector de docente con búsqueda: visible al crear, al editar si ya tiene docente, o si se seleccionó el rol Docente */}
       {(!isEdit || defaultValues?.docente || rolesSelected.some((r) => r.label.toLocaleLowerCase() === 'docente')) && (
         <Select
@@ -276,13 +282,22 @@ const UserForm = ({ defaultValues, onSuccess }: UserFormProps) => {
         className="text-black"
         required
       />
+      </div>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center pt-6">
         <button
           type="submit"
-          className="px-20 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600"
+          disabled={isSubmitting}
+          className="px-20 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          {isEdit ? "Actualizar" : "Guardar"}
+          {isSubmitting ? (
+            <>
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+              {isEdit ? "Actualizando..." : "Guardando..."}
+            </>
+          ) : (
+            isEdit ? "Actualizar" : "Guardar"
+          )}
         </button>
       </div>
     </form>

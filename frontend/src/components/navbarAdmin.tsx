@@ -150,7 +150,7 @@ function NavbarAdmin() {
     : 'Profesión no registrada'
 
   const isActive = (route: string) =>
-    pathname === route
+    pathname === route || pathname.startsWith(`${route}/`)
       ? 'text-sky-400 translate-x-1'
       : 'text-gray-300 hover:text-sky-300 hover:translate-x-2'
 
@@ -254,7 +254,7 @@ function NavbarAdmin() {
               >
                 <div className="flex items-center gap-3">
                   <FaUserShield />
-                  <span>Autenticación</span>
+                  <span>Gestión de Acceso</span>
                 </div>
                 <FaChevronDown className={`${openUsers ? 'rotate-180' : ''} transition`} />
               </button>
@@ -328,7 +328,7 @@ function NavbarAdmin() {
 
               <Link
                 href="/docente/registerDocente"
-                className={`flex items-center gap-3 p-3 rounded-md transition-transform duration-200 ${isActive('/esquela-calificaciones')}`}
+                className={`flex items-center gap-3 p-3 rounded-md transition-transform duration-200 ${isActive('/docente/registerDocente')}`}
               >
                 <FaChalkboardTeacher />
                 <span>Registro Docente</span>
@@ -336,7 +336,7 @@ function NavbarAdmin() {
 
               <Link
                 href="/registerEstudent"
-                className={`flex items-center gap-3 p-3 rounded-md transition-transform duration-200 ${isActive('/esquela-calificaciones')}`}
+                className={`flex items-center gap-3 p-3 rounded-md transition-transform duration-200 ${isActive('/registerEstudent')}`}
               >
                 <FaUserGraduate />
                 <span>Registro Estudiante</span>

@@ -316,7 +316,7 @@ export function AnioLectivoForm({ defaultValues, onSuccess }: AnioLectivoFormPro
         const createdAnioLectivo = await saveAnioLectivo(payload);
         toast({
           title: "Año lectivo creado",
-          description: "El backend generó los períodos y repartió los cortes automáticamente.",
+          description: "El año lectivo se ha creado correctamente.",
           variant: "success",
         });
         onSuccess(createdAnioLectivo);
@@ -442,13 +442,13 @@ export function AnioLectivoForm({ defaultValues, onSuccess }: AnioLectivoFormPro
                                 className={`rounded-2xl border px-4 py-3 text-left transition ${isSelected ? "border-slate-900 bg-slate-900 text-white shadow-sm" : "border-stone-200 bg-white text-slate-700 hover:border-stone-300 hover:bg-stone-100"}`}
                               >
                                 <div className="flex items-center justify-between gap-3">
-                                  <div>
-                                    <p className="text-sm font-semibold">{corte.corte}</p>
-                                    <p className={`text-xs ${isSelected ? "text-slate-200" : "text-slate-500"}`}>
+                                  <div className="min-w-0 flex-1">
+                                    <p className="text-sm font-semibold whitespace-normal">{corte.corte}</p>
+                                    <p className={`text-xs whitespace-normal ${isSelected ? "text-slate-200" : "text-slate-500"}`}>
                                       ID {corte.id} · {corte.abreviatura}
                                     </p>
                                   </div>
-                                  <span className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${isSelected ? "bg-white/15 text-white" : "bg-stone-100 text-stone-500"}`}>
+                                  <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${isSelected ? "bg-white/15 text-white" : "bg-stone-100 text-stone-500"}`}>
                                     {isSelected ? "Asignado" : "Disponible"}
                                   </span>
                                 </div>
@@ -528,8 +528,8 @@ export function AnioLectivoForm({ defaultValues, onSuccess }: AnioLectivoFormPro
                             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-950 text-sm font-semibold text-white">
                               {periodo.orden}
                             </span>
-                            <div>
-                              <p className="text-base font-semibold text-slate-950">{periodo.nombre}</p>
+                            <div className="min-w-0">
+                              <p className="text-base font-semibold whitespace-normal text-slate-950">{periodo.nombre}</p>
                               <p className="text-xs uppercase tracking-[0.16em] text-stone-500">{periodo.abreviatura}</p>
                             </div>
                           </div>
@@ -545,7 +545,7 @@ export function AnioLectivoForm({ defaultValues, onSuccess }: AnioLectivoFormPro
                           periodo.cortes.map((corte) => (
                             <span
                               key={`${periodo.orden}-${corte.id}`}
-                              className="rounded-full border border-slate-200 bg-slate-950 px-3 py-1.5 text-xs font-semibold tracking-wide text-white"
+                              className="max-w-full whitespace-normal rounded-full border border-slate-200 bg-slate-950 px-3 py-1.5 text-center text-xs font-semibold tracking-wide text-white"
                             >
                               {corte.corte} · ID {corte.id}
                             </span>

@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import * as jose from 'jose'
+import { hasRole, ROL_ADMIN, ROL_DOCENTE } from '@/utils/roles'
 
 export const config = {
     matcher: ['/admin/:path*', '/docente/home:path*'], // rutas a proteger
@@ -33,15 +34,15 @@ export default async function proxy(req: NextRequest) {
 
         console.log('Payload del token:', payload)
 
-        // Validar roles de forma segura
-        const roles = Array.isArray(payload.roles) ? payload.roles : []
+        // Validar roles de forma segura (sin importar mayúsculas/minúsculas)
+        const roles = Array.isArray(payload.roles) ? (payload.roles as string[]) : []
 
-        if (pathname.startsWith('/admin') && !roles.includes('Admin')) {
+        if (pathname.startsWith('/admin') && !hasRole(roles, ROL_ADMIN)) {
             console.log('Usuario sin rol Admin, redirigiendo al login')
             return NextResponse.redirect(new URL('/auth/login', req.url))
         }
 
-        if (pathname.startsWith('/docente') && !roles.includes('Docente')) {
+        if (pathname.startsWith('/docente') && !hasRole(roles, ROL_DOCENTE)) {
             console.log('Usuario sin rol Docente, redirigiendo al login')
             return NextResponse.redirect(new URL('/auth/login', req.url))
         }

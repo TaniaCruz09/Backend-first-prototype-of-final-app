@@ -102,7 +102,7 @@ export default function HomePage() {
       <Header title='Sistema de Calificaciones SIRD' subTitle='Home Docente' />
       <div className="container mx-auto px-6 py-7">
           <div className="mb-5">
-            <h2 className="text-2xl font-bold text-foreground mb-1">{`Bienvenida Prof. ${docente?.nombres} ${docente?.apellido_paterno}`}</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-1">{`Bienvenid@ Prof. ${docente?.nombres} ${docente?.apellido_paterno}`}</h2>
             <p className="text-muted-foreground">{`Docente de ${docente?.profession?.map((p: any) => p.profession).join(', ')} / podrá acceder a sus grados y registrar calificaciones`}</p>
           </div>
 

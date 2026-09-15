@@ -4,6 +4,7 @@ import { createContext, useState, useEffect, ReactNode, useContext, useRef } fro
 import { useRouter } from 'next/navigation'
 import { SelectRole, logoutUser, refreshSession } from '@/actions/authMethods/loginMethods'
 import { setAuthCookie, clearAuthCookie } from '@/actions/authMethods/authCookie'
+import { hasRole, normalizeRole, normalizeRoles, ROL_DOCENTE } from '@/utils/roles'
 import { Docente } from '@/interfaces'
 import { getUserById } from '@/actions/authMethods/usersMethods'
 import { getDocenteById } from '@/actions/docentesMethods/docentesMethods'
@@ -59,20 +60,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
                 const user = await getUserById(Number(userId)) // 🔹 traemos usuario completo
-                const userRoles = user.roles?.map((r: any) => (typeof r === 'string' ? r : r.rol)) || []
+                const userRoles = normalizeRoles(user.roles)
 
                 setRoles(userRoles)
                 localStorage.setItem('roles', JSON.stringify(userRoles))
 
-                const lastRol = localStorage.getItem('rol') || userRoles[0] || null
-                setRol(lastRol)
+                const lastRol = normalizeRole(localStorage.getItem('rol') || userRoles[0] || null)
+                setRol(lastRol || null)
                 if (lastRol) localStorage.setItem('rol', lastRol)
 
                 if (user.docente) {
                     setDocente(user.docente)
                     localStorage.setItem('docente', JSON.stringify(user.docente))
                 }
-                else if (user.roles?.includes("Docente")) {
+                else if (hasRole(userRoles, ROL_DOCENTE)) {
                     console.warn('Usuario con rol Docente sin relacion docente en /users/:id')
                 }
 
@@ -101,7 +102,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setRoles(newRoles) // actualizamos roles disponibles
                 localStorage.setItem('roles', JSON.stringify(newRoles))
             }
-            if (user?.roles?.some((r: any) => (typeof r === 'string' ? r : r.rol) === "Docente")) {
+            if (hasRole(normalizeRoles(user?.roles), ROL_DOCENTE)) {
                 const userId = user.id || localStorage.getItem('userId')
                 if (userId) {
                     const fullUser = await getUserById(Number(userId))
@@ -128,11 +129,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             // 🔹 Cargar docente si el usuario tiene ese rol
             if (userData) {
-                const userRolesArray = userData.roles?.map((r: any) =>
-                    typeof r === 'string' ? r : r.rol
-                ) || []
+                const userRolesArray = normalizeRoles(userData.roles)
 
-                if (userRolesArray.includes("Docente")) {
+                if (hasRole(userRolesArray, ROL_DOCENTE)) {
                     const userId = userData.id || localStorage.getItem('userId')
                     if (userId) {
                         try {
@@ -159,8 +158,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
             if (newRol) {
                 const response = await SelectRole({ role: newRol })
-                setRol(response.role)
-                localStorage.setItem('rol', response.role)
+                const rolCanonico = normalizeRole(response.role)
+                setRol(rolCanonico)
+                localStorage.setItem('rol', rolCanonico)
 
                 // select-role emite un token nuevo: guardarlo y refrescar la cookie del middleware
                 if (response.token) {

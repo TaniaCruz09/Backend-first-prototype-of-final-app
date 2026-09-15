@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FaUserShield, FaChalkboardTeacher } from 'react-icons/fa'
 import { useAuth } from '@/hooks/useAuth'
+import { normalizeRoles, ROL_ADMIN, ROL_DOCENTE } from '@/utils/roles'
 import { JSX } from 'react/jsx-runtime'
 
 interface Role {
@@ -31,8 +32,8 @@ export default function SelectRolePage() {
       return
     }
 
-    const mappedRoles: Role[] = sourceRoles.map((r) => {
-      if (r === 'Admin') {
+    const mappedRoles: Role[] = normalizeRoles(sourceRoles).map((r) => {
+      if (r === ROL_ADMIN) {
         return {
           rol: r,
           title: 'Administrador',
@@ -40,7 +41,7 @@ export default function SelectRolePage() {
           icon: <FaUserShield className="text-white text-2xl" />,
         }
       }
-      if (r === 'Docente') {
+      if (r === ROL_DOCENTE) {
         return {
           rol: r,
           title: 'Docente',

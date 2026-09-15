@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { saveLogin } from '@/actions/authMethods/loginMethods'
 import { setAuthCookie } from '@/actions/authMethods/authCookie'
 import { useAuth } from '@/hooks/useAuth'
+import { normalizeRoles } from '@/utils/roles'
 import Link from 'next/link'
 import AlertCard from '@/components/alertReutilizable/AlertCard'
 
@@ -26,7 +27,9 @@ export default function LoginPage() {
     try {
   
       const res = await saveLogin({ email, password })
-      const { user, roles, autoSelectRole, token } = res
+      const { user, autoSelectRole, token } = res
+      // Normaliza los roles ('docente' -> 'Docente') para que el resto del sistema funcione igual
+      const roles = normalizeRoles(res.roles)
 
       // Guardar datos del usuario
       localStorage.setItem('userId', String(user.id))
@@ -52,7 +55,7 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       console.log('Error al iniciar sesión:', err)
-      setError(err.response?.data?.message || 'Error desconocido')
+      setError(err?.message || err?.response?.data?.message || 'Error desconocido')
     } finally {
       setLoading(false)
     }

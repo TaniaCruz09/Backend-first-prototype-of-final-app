@@ -33,8 +33,8 @@ export default function HomePage() {
         <div className="m-5">
           <h2 className="text-2xl font-bold text-foreground mb-1">
             {rol === 'Admin'
-              ? `Bienvenido Admin${nombreUsuario ? `, ${nombreUsuario}` : ''}`
-              : `Bienvenido ${rol}`}
+              ? `Bienvenid@ Admin${nombreUsuario ? `, ${nombreUsuario}` : ''}`
+              : `Bienvenid@ ${rol}`}
           </h2>
           <p className="text-muted-foreground">
             Administra fácilmente las funciones del sistema desde aquí
